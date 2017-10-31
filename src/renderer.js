@@ -1,5 +1,10 @@
 import JournalWatcher from './components/journal-watcher';
 
-let watcher = new JournalWatcher('G:\\Documents\\GitHub\\ed-fleet-client\\test.txt');
-console.log('Starting watcher');
-watcher.watchFile();
+const startWatcher = () => {
+    const filePath = document.getElementById('pathInput').value;
+    const watcher = new JournalWatcher(filePath);
+    console.log('Starting watcher');
+    watcher.watchFile();
+};
+
+document.querySelector('#pathButton').addEventListener('click', startWatcher);

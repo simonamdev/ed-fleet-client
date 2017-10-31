@@ -7,7 +7,7 @@ export default class JournalWatcher {
     }
 
     init() {
-        let file = fs.readFileSync(this.path);
+        const file = fs.readFileSync(this.path);
         console.log(`Original file contnents amount: ${file.length}`);
     }
 
@@ -15,7 +15,7 @@ export default class JournalWatcher {
         fs.watch(this.path, (event, filename) => {
             if (filename) {
                 console.log(`Event: ${event}`);
-                let file = fs.readFileSync(this.path);
+                const file = fs.readFileSync(this.path);
                 // console.log('File content at : ' + new Date() + ' is \n' + file);
                 this.parseFileContents(file.toString());
             } else {
@@ -25,10 +25,10 @@ export default class JournalWatcher {
     }
 
     parseFileContents(data) {
-        let lines = data.split('\n');
+        const lines = data.split('\n');
         console.log(`Lines: ${lines.join(',')}`);
         console.log(`Lines found: ${lines.length}`);
-        let newLine = lines[lines.length - 1];
+        const newLine = lines[lines.length - 1];
         if (newLine !== this.lastLine) {
             this.lastLine = newLine;
             console.log(`New line: ${newLine}`);

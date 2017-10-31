@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 /*
 Basic Elite: Dangerous Journal Watching algorithm:
@@ -16,25 +17,74 @@ Start loop:
 export default class JournalWatcher {
     constructor(directory) {
         this.directory = directory;
+        this.fileNames = fs.readdirSync(this.directory);
+        this.currentFile = path.join(this.directory, this.getLastCreatedFileName());
         this.lastLine = null;
+        this.watcher = null;
+        this.init();
     }
 
     init() {
-        const file = fs.readFileSync(this.path);
-        console.log(`Original file contnents amount: ${file.length}`);
+        if (!fs.lstatSync(this.directory).isDirectory()) {
+            console.log(`Error: Path is not a directory: ${this.directory}`);
+        } else {
+            this.fileNames = fs.readdirSync(this.directory);
+            console.log(`${this.fileNames.length} files found: \n${this.fileNames.join(',')}`)
+        }
     }
 
-    watch(directory) {
+    watch() {
+        this.setupNewFile();
+        this.watchFile();
+    }
 
+    setupNewFile() {
+        if (this.newFileFound()) {
+            this.currentFile = path.join(this.directory, this.getLastCreatedFileName());
+        }
+    }
+
+    newFileFound() {
+        // Check if a new file has been created
+        let fileNames = fs.readdirSync(this.directory);
+        let currentFileNames = this.fileNames.slice();
+        // Compare sorted values
+        fileNames.sort();
+        currentFileNames.sort();
+        return fileNames.join(',') !== currentFileNames.join(',');
+    }
+
+    getLastCreatedFileName() {
+        let latestIndex = 0;
+        let latestTime = new Date(0) ;
+        for (let i = 0; i < this.fileNames.length; i++) {
+            let fileName = this.fileNames[i];
+            let fullPath = path.join(this.directory, fileName);
+            let creationTime = fs.statSync(fullPath).ctime;
+            console.log(`${fileName}: ${creationTime}`);
+        }
+        for (let i = 0; i < this.fileNames.length; i++) {
+            let fileName = this.fileNames[i];
+            let fullPath = path.join(this.directory, fileName);
+            let creationTime = fs.statSync(fullPath).ctime;
+            if (creationTime > latestTime) {
+                latestTime = creationTime;
+                latestIndex = i;
+            }
+        }
+        return this.fileNames[latestIndex];
     }
 
     watchFile() {
-        fs.watch(this.path, (event, filename) => {
+        console.log(`Watching: ${this.currentFile}`);
+        this.watcher = fs.watch(this.currentFile, (event, filename) => {
             if (filename) {
                 console.log(`Event: ${event}`);
-                const file = fs.readFileSync(this.path);
+                const file = fs.readFileSync(this.currentFile);
                 // console.log('File content at : ' + new Date() + ' is \n' + file);
                 this.parseFileContents(file.toString());
+                // Check for new file
+                this.setupNewFile();
             } else {
                 console.log('Filename not provided');
             }
@@ -43,10 +93,10 @@ export default class JournalWatcher {
 
     parseFileContents(data) {
         const lines = data.split('\n');
-        console.log(`Lines: ${lines.join(',')}`);
-        console.log(`Lines found: ${lines.length}`);
+        // console.log(`Lines: ${lines.join(',')}`);
+        // console.log(`Lines found: ${lines.length}`);
         const newLine = lines[lines.length - 1];
-        if (newLine !== this.lastLine) {
+        if (newLine !== this.lastLine && newLine !== '') {
             this.lastLine = newLine;
             console.log(`New line: ${newLine}`);
         } else {

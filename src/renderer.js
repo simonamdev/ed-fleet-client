@@ -11,7 +11,7 @@ const startWatcher = () => {
         const filePath = document.getElementById('pathInput').value;
         watcher = new JournalWatcher(filePath);
         console.log('Starting watcher');
-        watcher.watchFile();
+        watcher.watch();
     }
 };
 

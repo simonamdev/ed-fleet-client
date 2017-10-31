@@ -1,14 +1,31 @@
 import fs from 'fs';
 
+/*
+Basic Elite: Dangerous Journal Watching algorithm:
+1. Given a directory:
+2. Check directory exists and is a directory
+Start loop:
+    3. Check if new file has appeared in directory
+    4. If true, choose that file
+    5. If false, choose last modified file
+    6. Watch for file changes
+    7. For each file change:
+        8. Perform whatever processing is required
+*/
+
 export default class JournalWatcher {
-    constructor(path) {
-        this.path = path;
+    constructor(directory) {
+        this.directory = directory;
         this.lastLine = null;
     }
 
     init() {
         const file = fs.readFileSync(this.path);
         console.log(`Original file contnents amount: ${file.length}`);
+    }
+
+    watch(directory) {
+
     }
 
     watchFile() {

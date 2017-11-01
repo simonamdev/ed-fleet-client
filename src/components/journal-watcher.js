@@ -4,7 +4,8 @@ import path from 'path';
 import { LogWatcher } from 'ed-logwatcher';
 
 export default class JournalWatcher {
-    constructor(directory) {
+    constructor(tracker, directory) {
+        this.tracker = tracker;
         this.directory = directory || path.join(
             os.homedir(),
             'Saved Games',
@@ -12,8 +13,6 @@ export default class JournalWatcher {
             'Elite Dangerous'
         );
         this.watcher = new LogWatcher(this.directory, 3);
-        this.linesLoaded = 0;
-        this.lastEvent = '';
     }
 
     init() {
@@ -33,13 +32,13 @@ export default class JournalWatcher {
             // console.log('Data: ');
             // console.log(obs);
             // console.log(obs.length);
-            this.linesLoaded += obs.length;
-            this.lastEvent = obs[obs.length - 1].event;
+            this.tracker.addLoadedEventsCount(obs.length);
+            this.tracker.addRecentEvents(obs);
         });
     }
 
     onDataLoad() {
-        document.getElementById('dataCount').innerText = this.linesLoaded.toString();
-        document.getElementById('lastEvent').innerText = this.lastEvent;
+        document.getElementById('dataCount').innerText = this.tracker.getEventCount();
+        document.getElementById('lastEvent').innerText = this.tracker.getLastEvent().event;
     }
 }

@@ -1,9 +1,11 @@
 import os from 'os';
 import path from 'path';
+import JournalTracker from './components/journal-tracker';
 import JournalWatcher from './components/journal-watcher';
 
 // Global reference to watcher to stop user from starting more than one
 let watcher;
+let tracker = new JournalTracker();
 let pathInput = document.getElementById('pathInput');
 let pathButton = document.getElementById('pathButton');
 
@@ -12,7 +14,7 @@ const startWatcher = () => {
         // TODO: Show errors on window
         console.log(`Error: watcher already started for file: ${watcher.directory}`);
     } else {
-        watcher = new JournalWatcher(pathInput.value);
+        watcher = new JournalWatcher(tracker, pathInput.value);
         watcher.init();
     }
 };

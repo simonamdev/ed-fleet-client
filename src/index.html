@@ -6,15 +6,27 @@
         <link rel="stylesheet" href="css/app.css" />
     </head>
     <body>
-        <h1>E:D Fleet Client</h1>
+        <h1>Elite: Dangerous Fleet Client</h1>
         <div>
-            <input type="text" id="pathInput" value="" placeholder="Enter the path to the journal directory" style="width: 100%;" />
-            <button id="pathButton">Start Watcher</button>
+            <h2>Settings</h2>
+            <div>
+                <h3>Journal Watcher</h3>
+                <input type="text" id="pathInput" value="" placeholder="Enter the path to the journal directory" style="width: 100%;" />
+                <button id="pathButton">Start Watcher</button>
+            </div>
+            <div>
+                <h3>Fleet Server</h3>
+                <input type="url" id="serverInput" value="http://fleet.purrcat.space/" placeholder="Enter the fleet server URL" style="width: 100%;" />
+                <button id="serverButton">Test Connection</button>
+            </div>
         </div>
         <div>
             <h2>Telemetry</h2>
             <p>
-                Watcher: <span id="watcherState" class="watcher watcher-inactive">Inactive</span>
+                Watcher: <span id="watcherState" class="activity inactive">Inactive</span>
+            </p>
+            <p>
+                Server: <span id="serverState" class="activity inactive">Connection not attempted</span>
             </p>
             <p>
                 Lines loaded: <span id="dataCount"></span>

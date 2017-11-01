@@ -10,7 +10,9 @@ let pathButton = document.getElementById('pathButton');
 let journal = new Journal(pathInput.value);
 
 const startWatcher = () => {
-    journal.startWatcher();
+    if (!journal.isActive()) {
+        journal.startWatcher();
+    }
 };
 
 // Add default directory to input
@@ -24,3 +26,7 @@ let defaultPath = path.join(
 pathInput.value = defaultPath;
 // Attach event to button to start watcher
 pathButton.addEventListener('click', startWatcher);
+
+const checkServer = () => {
+    
+};

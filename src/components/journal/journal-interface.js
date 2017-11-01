@@ -30,12 +30,12 @@ export default class JournalInterface {
     // TODO: Move into updateUI?
     updateWatcher() {
         if (this.tracker.getWatcherState()) {
-            this.watcherStateEl.classList.add('watcher-active');
-            this.watcherStateEl.classList.remove('watcher-inactive');
+            this.watcherStateEl.classList.add('active');
+            this.watcherStateEl.classList.remove('inactive');
             this.watcherStateEl.innerText = 'Active';
         } else {
-            this.watcherStateEl.classList.add('watcher-inactive');
-            this.watcherStateEl.classList.remove('watcher-active');
+            this.watcherStateEl.classList.add('inactive');
+            this.watcherStateEl.classList.remove('active');
             this.watcherStateEl.innerText = 'Inactive';
         }
     }

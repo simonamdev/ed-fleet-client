@@ -21,4 +21,12 @@ export default class Journal {
         this.interface.updateWatcher();
         this.watcher.stop();
     }
+
+    checkConnection() {
+
+    }
+
+    isActive() {
+        return this.tracker.getWatcherState();
+    }
 }

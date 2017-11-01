@@ -2,20 +2,15 @@ import os from 'os';
 import path from 'path';
 import Journal from './components/journal';
 
-// Global reference to watcher to stop user from starting more than one
-let journal;
-
 // References to DOM elements
 let pathInput = document.getElementById('pathInput');
 let pathButton = document.getElementById('pathButton');
 
+// Global reference to journal to stop user from starting more than one
+let journal = new Journal(pathInput.value);
+
 const startWatcher = () => {
-    if (journal) {
-        // TODO: Show errors on window
-        console.log(`Error: watcher already started for file: ${watcher.directory}`);
-    } else {
-        journal = new Journal(pathInput.value);
-    }
+    journal.startWatcher();
 };
 
 // Add default directory to input

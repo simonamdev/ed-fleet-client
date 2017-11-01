@@ -1,6 +1,7 @@
 export default class JournalTracker {
     constructor() {
         this.active = false;
+        this.lastLatencyEvent = {};
         this.eventsLoaded = 0;
         this.lastEvent = null;
         this.eventsTransmitted = 0;
@@ -37,12 +38,12 @@ export default class JournalTracker {
         return this.recentEvents[this.recentEvents.length - 1];
     }
 
-    openUplink() {
-        this.active = true;
+    setWatcherState(state) {
+        this.active = state;
     }
 
-    closeUplink() {
-        this.active = false;
+    getWatcherState() {
+        return this.active;
     }
 
     getEventCountTransmitted() {

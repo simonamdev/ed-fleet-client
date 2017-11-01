@@ -14,12 +14,12 @@ export default class JournalWatcher extends EventEmitter {
             'Frontier Developments',
             'Elite Dangerous'
         );
-        this.watcher = new LogWatcher(this.directory, 3);
-        this.init();
+        this.watcher = null;
     }
 
     init() {
         console.log(`Initialising watcher for: ${this.directory}`);
+        this.watcher = new LogWatcher(this.directory, 3);
         this.watcher.on('Started', () => {
             console.log('Started');
         });
@@ -38,6 +38,11 @@ export default class JournalWatcher extends EventEmitter {
             this.tracker.addLoadedEventsCount(obs.length);
             this.tracker.addRecentEvents(obs);
         });
+    }
+
+    stop() {
+        this.watcher.stop();
+        this.watcher = null;
     }
 
     onDataLoad() {

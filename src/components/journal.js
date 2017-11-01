@@ -9,4 +9,16 @@ export default class Journal {
         this.watcher = new JournalWatcher(this.tracker, pathInput.value);
         this.interface = new JournalInterface(this.watcher);
     }
+
+    startWatcher() {
+        this.tracker.setWatcherState(true);
+        this.interface.updateWatcher();
+        this.watcher.init();
+    }
+
+    stopWatcher() {
+        this.tracker.setWatcherState(false);
+        this.interface.updateWatcher();
+        this.watcher.stop();
+    }
 }

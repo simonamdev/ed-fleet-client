@@ -1,0 +1,17 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+.watcher {
+    padding: .25em;
+    color: white;
+}
+
+.watcher-active {
+    background-color: green;
+}
+
+.watcher-inactive {
+    background-color: red;
+}

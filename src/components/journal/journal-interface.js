@@ -26,8 +26,12 @@ export default class JournalInterface {
     updateWatcher() {
         if (this.tracker.getWatcherState()) {
             this.watcherStateEl.classList.add('watcher-active');
+            this.watcherStateEl.classList.remove('watcher-inactive');
+            this.watcherStateEl.innerText = 'Active';
         } else {
+            this.watcherStateEl.classList.add('watcher-inactive');
             this.watcherStateEl.classList.remove('watcher-active');
+            this.watcherStateEl.innerText = 'Inactive';
         }
     }
 }

@@ -7,7 +7,7 @@ export default class Journal {
         this.directory = pathInput.value;
         this.tracker = new JournalTracker();
         this.watcher = new JournalWatcher(this.tracker, pathInput.value);
-        this.interface = new JournalInterface(this.watcher);
+        this.interface = new JournalInterface(this.watcher, this.tracker);
     }
 
     startWatcher() {

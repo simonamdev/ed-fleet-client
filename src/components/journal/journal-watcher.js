@@ -28,11 +28,9 @@ export default class JournalWatcher extends EventEmitter {
             console.error(err.stack || err);
         });
         this.watcher.on('finished', () => {
-            console.log('Finished');
             this.onDataLoad();
         });
         this.watcher.on('data', (obs) => {
-            // console.log('Data: ');
             // console.log(obs);
             // console.log(obs.length);
             this.tracker.addLoadedEventsCount(obs.length);

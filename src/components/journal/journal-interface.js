@@ -1,7 +1,7 @@
 export default class JournalInterface {
-    constructor(watcher) {
+    constructor(watcher, tracker) {
         this.watcher = watcher;
-        this.tracker = watcher.tracker;
+        this.tracker = tracker;
         this.init();
     }
 
@@ -13,9 +13,13 @@ export default class JournalInterface {
         self.watcherStateEl = document.getElementById('watcherState');
         // Subscribe to watcher events
         self.watcher.on('update', () => {
-            self.updateEvents();
+            self.updateUI();
         });
         // TODO: Subscribe to transmission events
+    }
+
+    updateUI() {
+        this.updateEvents();
     }
 
     updateEvents() {
@@ -23,6 +27,7 @@ export default class JournalInterface {
         document.getElementById('lastEvent').innerText = this.tracker.getLastEvent().event;
     }
 
+    // TODO: Move into updateUI?
     updateWatcher() {
         if (this.tracker.getWatcherState()) {
             this.watcherStateEl.classList.add('watcher-active');

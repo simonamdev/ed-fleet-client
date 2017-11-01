@@ -8,11 +8,11 @@ export default class JournalInterface {
     init() {
         let self = this;
         self.watcher.on('update', () => {
-            self.update();
+            self.updateEvents();
         });
     }
 
-    update() {
+    updateEvents() {
         document.getElementById('dataCount').innerText = this.tracker.getEventCount();
         document.getElementById('lastEvent').innerText = this.tracker.getLastEvent().event;
     }

@@ -15,6 +15,7 @@ export default class JournalWatcher extends EventEmitter {
             'Elite Dangerous'
         );
         this.watcher = new LogWatcher(this.directory, 3);
+        this.init();
     }
 
     init() {

@@ -5,9 +5,20 @@
         <title></title>
     </head>
     <body>
-        E:D Fleet Client
-        <input type="text" id="pathInput" value="G:\\Documents\\GitHub\\ed-fleet-client\\test\\" />
-        <button id="pathButton">Start Watcher</button>
+        <h1>E:D Fleet Client</h1>
+        <div>
+            <input type="text" id="pathInput" value="" placeholder="Enter the path to the journal directory" />
+            <button id="pathButton">Start Watcher</button>
+        </div>
+        <div>
+            <h2>Telemetry</h2>
+            <p>
+                Lines loaded: <span id="dataCount"></span>
+            </p>
+            <p>
+                Last event: <span id="lastEvent"></span>
+            </p>
+        </div>
     </body>
     <script>require('./renderer.js');</script>
 </html>

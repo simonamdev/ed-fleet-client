@@ -1,10 +1,12 @@
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
+import EventEmitter from 'events';
 import { LogWatcher } from 'ed-logwatcher';
 
-export default class JournalWatcher {
+export default class JournalWatcher extends EventEmitter {
     constructor(tracker, directory) {
+        super();
         this.tracker = tracker;
         this.directory = directory || path.join(
             os.homedir(),
@@ -38,7 +40,6 @@ export default class JournalWatcher {
     }
 
     onDataLoad() {
-        document.getElementById('dataCount').innerText = this.tracker.getEventCount();
-        document.getElementById('lastEvent').innerText = this.tracker.getLastEvent().event;
+        this.emit('update');
     }
 }

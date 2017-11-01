@@ -2,9 +2,11 @@ import os from 'os';
 import path from 'path';
 import JournalTracker from './components/journal-tracker';
 import JournalWatcher from './components/journal-watcher';
+import JournalInterface from './components/journal-interface';
 
 // Global reference to watcher to stop user from starting more than one
 let watcher;
+let journalInterface;
 let tracker = new JournalTracker();
 let pathInput = document.getElementById('pathInput');
 let pathButton = document.getElementById('pathButton');
@@ -16,6 +18,8 @@ const startWatcher = () => {
     } else {
         watcher = new JournalWatcher(tracker, pathInput.value);
         watcher.init();
+        journalInterface = new JournalInterface(watcher);
+        journalInterface.init();
     }
 };
 

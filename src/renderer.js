@@ -6,10 +6,14 @@ import Journal from './components/journal';
 let pathInput = document.getElementById('pathInput');
 let pathButton = document.getElementById('pathButton');
 
+let serverInput = document.getElementById('serverInput');
+let serverButton = document.getElementById('serverButton');
+
 // Global reference to journal to stop user from starting more than one
-let journal = new Journal(pathInput.value);
+let journal;
 
 const startWatcher = () => {
+    journal = new Journal(pathInput.value, serverInput.value);
     if (!journal.isActive()) {
         journal.startWatcher();
     }
@@ -28,5 +32,17 @@ pathInput.value = defaultPath;
 pathButton.addEventListener('click', startWatcher);
 
 const checkServer = () => {
-    
+    if (journal) {
+        journal.checkConnection().then((response) => {
+            console.log(response);
+        });
+    } else {
+        console.log('Watcher is inactive');
+    }
 };
+
+// Set the default value for the URL
+// TODO: Replace this according to the process env variable for production
+serverInput.value = 'http://localhost:4000/';
+// Attach event to button to check connection
+serverButton.addEventListener('click', checkServer);

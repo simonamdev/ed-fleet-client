@@ -1,13 +1,16 @@
 import JournalTracker from './journal/journal-tracker';
 import JournalWatcher from './journal/journal-watcher';
 import JournalInterface from './journal/journal-interface';
+import JournalTransmitter from './journal/journal-transmitter';
 
 export default class Journal {
-    constructor(directory) {
-        this.directory = pathInput.value;
+    constructor(directory, url) {
+        this.directory = directory;
+        this.url = url;
         this.tracker = new JournalTracker();
-        this.watcher = new JournalWatcher(this.tracker, pathInput.value);
+        this.watcher = new JournalWatcher(this.tracker, this.directory);
         this.interface = new JournalInterface(this.watcher, this.tracker);
+        this.transmitter = new JournalTransmitter(this.url);
     }
 
     startWatcher() {
@@ -23,7 +26,7 @@ export default class Journal {
     }
 
     checkConnection() {
-
+        return this.transmitter.checkLatency();
     }
 
     isActive() {

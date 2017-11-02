@@ -33,6 +33,7 @@ pathButton.addEventListener('click', startWatcher);
 
 const checkServer = () => {
     if (journal) {
+        journal.setUrl(serverInput.value);
         journal.checkConnection();
     } else {
         console.log('Watcher is inactive');

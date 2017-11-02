@@ -32,6 +32,10 @@ export default class Journal {
         // TODO: Subscribe to transmission events
     }
 
+    setUrl(url) {
+        this.url = url;
+    }
+
     startWatcher() {
         this.tracker.setWatcherState(true);
         this.updateWatcherUi();
@@ -86,7 +90,6 @@ export default class Journal {
             if (!this.connectionCheck) {
                 let self = this;
                 this.connectionCheck = setInterval(() => {
-                    console.log('Checking latency');
                     self.checkConnection();
                 }, 5000);
             }

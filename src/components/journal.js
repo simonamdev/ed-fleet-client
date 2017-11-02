@@ -78,16 +78,18 @@ export default class Journal {
         this.serverStateEl.classList.remove('active');
         this.serverStateEl.classList.remove('inactive');
         this.serverStateEl.classList.add('in-progress');
-        this.transmitter.checkLatency().then((response) => {
+        return this.transmitter.checkLatency().then((response) => {
             this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
             this.serverStateEl.classList.add('active');
             this.serverStateEl.classList.remove('inactive');
             this.updateServerUi();
+            return true;
         }).catch((error) => {
             this.tracker.setConnectionState(`Unable to connect: ${error}`);
             this.serverStateEl.classList.add('inactive');
             this.serverStateEl.classList.remove('active');
             this.updateServerUi();
+            return false;
         });
     }
 

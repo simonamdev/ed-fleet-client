@@ -7,7 +7,7 @@ export default class Journal {
         this.directory = directory;
         this.url = url;
         this.tracker = new JournalTracker();
-        this.watcher = new JournalWatcher(this.tracker, this.directory);
+        this.watcher = new JournalWatcher(this.directory);
         this.transmitter = new JournalTransmitter(this.url);
         this.init();
     }
@@ -19,10 +19,21 @@ export default class Journal {
         self.lastEventEl = document.getElementById('lastEvent');
         self.watcherStateEl = document.getElementById('watcherState');
         // Subscribe to watcher events
-        self.watcher.on('update', () => {
-            self.updateUI();
+        self.watcher.on('watcherUpdate', (obs) => {
+            // To avoid sending the whole file on startup, skip updating the state if
+            // the number of lines is greater than say 15
+            if (obs.length <= 15) {
+                console.log(obs);
+                this.updateState(obs);
+                self.updateUI();
+            }
         });
         // TODO: Subscribe to transmission events
+    }
+
+    updateState(data) {
+        this.tracker.addLoadedEventsCount(data.length);
+        this.tracker.addRecentEvents(data);
     }
 
     updateUI() {

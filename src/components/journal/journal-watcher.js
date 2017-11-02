@@ -5,9 +5,8 @@ import EventEmitter from 'events';
 import { LogWatcher } from 'ed-logwatcher';
 
 export default class JournalWatcher extends EventEmitter {
-    constructor(tracker, directory) {
+    constructor(directory) {
         super();
-        this.tracker = tracker;
         this.directory = directory || path.join(
             os.homedir(),
             'Saved Games',
@@ -28,13 +27,13 @@ export default class JournalWatcher extends EventEmitter {
             console.error(err.stack || err);
         });
         this.watcher.on('finished', () => {
-            this.onDataLoad();
+            // TODO?
+            console.log('Finished');
         });
         this.watcher.on('data', (obs) => {
             // console.log(obs);
             // console.log(obs.length);
-            this.tracker.addLoadedEventsCount(obs.length);
-            this.tracker.addRecentEvents(obs);
+            this.onData(obs);
         });
     }
 
@@ -43,7 +42,7 @@ export default class JournalWatcher extends EventEmitter {
         this.watcher = null;
     }
 
-    onDataLoad() {
-        this.emit('update');
+    onData(obs) {
+        this.emit('watcherUpdate', obs);
     }
 }

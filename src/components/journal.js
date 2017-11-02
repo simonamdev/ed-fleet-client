@@ -24,8 +24,7 @@ export default class Journal {
             // To avoid sending the whole file on startup, skip updating the state if
             // the number of lines is greater than say 15
             if (obs.length <= 15) {
-                console.log(obs);
-                this.updateState(obs);
+                this.updateEventsTelemetry(obs);
                 self.updateEventsUi();
             }
         });

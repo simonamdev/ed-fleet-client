@@ -79,7 +79,6 @@ export default class Journal {
         this.serverStateEl.classList.remove('inactive');
         this.serverStateEl.classList.add('in-progress');
         this.transmitter.checkLatency().then((response) => {
-            console.log(response);
             this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
             this.serverStateEl.classList.add('active');
             this.serverStateEl.classList.remove('inactive');

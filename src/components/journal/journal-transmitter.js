@@ -16,7 +16,9 @@ export default class JournalTransmitter {
             request.onload = () => {
                 if (request.status >= 200 && request.status < 400) {
                     // Success!
-                    resolve(JSON.parse(request.responseText));
+                    let response = JSON.parse(request.responseText);
+                    let latency = Math.abs(new Date() - new Date(response.time));
+                    resolve({ latency: latency });
                 } else {
                     // We reached our target server, but it returned an error
                     reject(`Error: ${request.responseText}, Code: ${request.status}`);

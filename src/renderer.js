@@ -41,6 +41,6 @@ const checkServer = () => {
 
 // Set the default value for the URL
 // TODO: Replace this according to the process env variable for production
-serverInput.value = 'http://localhost:4000/';
+serverInput.value = 'http://localhost:3000/';
 // Attach event to button to check connection
 serverButton.addEventListener('click', checkServer);

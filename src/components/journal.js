@@ -18,6 +18,7 @@ export default class Journal {
         self.dataCountEl = document.getElementById('dataCount');
         self.lastEventEl = document.getElementById('lastEvent');
         self.watcherStateEl = document.getElementById('watcherState');
+        self.serverStateEl = document.getElementById('serverState');
         // Subscribe to watcher events
         self.watcher.on('watcherUpdate', (obs) => {
             // To avoid sending the whole file on startup, skip updating the state if
@@ -25,24 +26,25 @@ export default class Journal {
             if (obs.length <= 15) {
                 console.log(obs);
                 this.updateState(obs);
-                self.updateUI();
+                self.updateEventsUi();
             }
         });
         // TODO: Subscribe to transmission events
     }
 
-    updateState(data) {
+    updateEventsTelemetry(data) {
         this.tracker.addLoadedEventsCount(data.length);
         this.tracker.addRecentEvents(data);
     }
 
-    updateUI() {
-        this.updateEvents();
+    updateEventsUi() {
+        this.dataCountEl.innerText = this.tracker.getEventCount();
+        this.lastEventEl.innerText = this.tracker.getLastEvent().event;
     }
 
-    updateEvents() {
-        document.getElementById('dataCount').innerText = this.tracker.getEventCount();
-        document.getElementById('lastEvent').innerText = this.tracker.getLastEvent().event;
+    updateServerUi() {
+        this.serverStateEl.classList.remove('in-progress');
+        this.serverStateEl.innerText = this.tracker.getConnectionState();
     }
 
     startWatcher() {
@@ -71,10 +73,22 @@ export default class Journal {
     }
 
     checkConnection() {
-        return this.transmitter.checkLatency().then((response) => {
+        this.tracker.setConnectionState('Attempting to connect');
+        this.updateServerUi();
+        this.serverStateEl.classList.remove('active');
+        this.serverStateEl.classList.remove('inactive');
+        this.serverStateEl.classList.add('in-progress');
+        this.transmitter.checkLatency().then((response) => {
             console.log(response);
+            this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
+            this.serverStateEl.classList.add('active');
+            this.serverStateEl.classList.remove('inactive');
+            this.updateServerUi();
         }).catch((error) => {
-
+            this.tracker.setConnectionState(`Unable to connect: ${error}`);
+            this.serverStateEl.classList.add('inactive');
+            this.serverStateEl.classList.remove('active');
+            this.updateServerUi();
         });
     }
 

@@ -25,8 +25,7 @@ export default class JournalTransmitter {
 
             request.onerror = () => {
                 // There was a connection error of some sort
-                console.error('Latency request error');
-                reject();
+                reject('Latency request error');
             };
 
             request.send();

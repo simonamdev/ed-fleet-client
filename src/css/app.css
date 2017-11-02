@@ -12,6 +12,11 @@ html, body {
     background-color: green;
 }
 
+.in-progress {
+    background-color: yellow;
+    color: black;
+}
+
 .inactive {
     background-color: red;
 }

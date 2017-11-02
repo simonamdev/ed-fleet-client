@@ -31,7 +31,7 @@ pathInput.value = defaultPath;
 // Attach event to button to start watcher
 pathButton.addEventListener('click', startWatcher);
 
-const checkServer = () => {
+const setUrl = () => {
     if (journal) {
         journal.setUrl(serverInput.value);
         journal.checkConnection();
@@ -44,4 +44,4 @@ const checkServer = () => {
 // TODO: Replace this according to the process env variable for production
 serverInput.value = 'http://localhost:3000/';
 // Attach event to button to check connection
-serverButton.addEventListener('click', checkServer);
+serverButton.addEventListener('click', setUrl);

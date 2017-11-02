@@ -28,7 +28,6 @@ export default class JournalWatcher extends EventEmitter {
         });
         this.watcher.on('finished', () => {
             // TODO?
-            console.log('Finished');
         });
         this.watcher.on('data', (obs) => {
             // console.log(obs);

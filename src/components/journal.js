@@ -27,6 +27,19 @@ export default class Journal {
             if (obs.length <= 15) {
                 this.updateEventsTelemetry(obs);
                 self.updateEventsUi();
+                let events = obs.slice();
+                setImmediate(() => {
+                    for (let i = 0; i < events.length; i++) {
+                        let ev = events[i];
+                        setImmediate(() => {
+                            self.transmitter.sendEvent(ev).catch((err) => {
+                                if (ev) {
+                                    console.error(`Error: ${err} sending event: ${ev.event}`);
+                                }
+                            });
+                        });
+                    }
+                }, 0, events);
             }
         });
         // TODO: Subscribe to transmission events

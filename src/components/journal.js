@@ -26,7 +26,11 @@ export default class Journal {
     }
 
     checkConnection() {
-        return this.transmitter.checkLatency();
+        return this.transmitter.checkLatency().then((response) => {
+            console.log(response);
+        }).catch((error) => {
+
+        });
     }
 
     isActive() {

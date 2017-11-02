@@ -1,4 +1,5 @@
 import url from 'url';
+import EventEmitter from 'events';
 
 export default class JournalTransmitter {
     constructor(serverUrl) {

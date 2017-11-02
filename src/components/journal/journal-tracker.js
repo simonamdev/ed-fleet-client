@@ -7,6 +7,7 @@ export default class JournalTracker {
         this.eventsTransmitted = 0;
         this.recentEvents = [];
         this.recentEventLimit = 5; // TODO: make this configurable
+        this.connectionState = '';
     }
 
     addLoadedEventsCount(count) {
@@ -52,5 +53,13 @@ export default class JournalTracker {
 
     addEventTransmittedCount(count) {
         this.eventsTransmitted += count;
+    }
+
+    setConnectionState(state) {
+        this.connectionState = state;
+    }
+
+    getConnectionState() {
+        return this.connectionState;
     }
 }

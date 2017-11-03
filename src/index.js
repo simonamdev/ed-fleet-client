@@ -1,14 +1,58 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 
+// UPDATER STUFF
+import { autoUpdater } from "electron-updater";
+const log = require('electron-log');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
+  autoUpdater.quitAndInstall();
 }
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
+
+// Updater stuff
+autoUpdater.on('checking-for-update', () => {
+    console.log('Checking for update');
+    log.info('Checking for update');
+});
+
+autoUpdater.on('update-available', (info) => {
+    console.log('Update available.');
+    log.info('Update available');
+    mainWindow.webContents.send('updateAvailable')
+})
+autoUpdater.on('update-not-available', (info) => {
+    console.log('Update not available.');
+    log.info('Upate not available');
+    mainWindow.webContents.send('updateNotAvailabe');
+})
+autoUpdater.on('error', (err) => {
+    console.log('Error in auto-updater. ' + err);
+    log.info('Error in auto-updater. ' + err);
+    mainWindow.webContents.send('updateError');
+
+})
+autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    console.log(log_message);
+    log.info(log_message);
+    mainWindow.webContents.send('updateProgress', log_message);
+})
+autoUpdater.on('update-downloaded', (info) => {
+    console.log('Update downloaded');
+    log.info('Update downloaded');
+    mainWindow.webContents.send('updateReady');
+});
+
 
 const createWindow = () => {
     // Create the browser window.
@@ -29,6 +73,7 @@ const createWindow = () => {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
     mainWindow = null;
+    // app.quit();
   });
 };
 
@@ -37,8 +82,17 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+    // autoUpdater.checkForUpdatesAndNotify();
     createWindow();
+    mainWindow.webContents.on('did-finish-load', function() {
+        mainWindow.webContents.send('ready');
+    });
+    console.log('Ready');
+    // mainWindow.webContents.send('ready');
+    autoUpdater.checkForUpdates();
 });
+
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -47,6 +101,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+  autoUpdater.quitAndInstall();
 });
 
 app.on('activate', () => {

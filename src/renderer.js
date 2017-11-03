@@ -2,50 +2,7 @@ import os from 'os';
 import path from 'path';
 import Journal from './components/journal';
 import packageJson from '../package.json';
-
-// UPDATER STUFF
-import { autoUpdater } from "electron-updater";
-const log = require('electron-log');
-
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = "info";
-
-// Updater stuff
-autoUpdater.on('checking-for-update', () => {
-    console.log('Checking for update');
-    log.info('Checking for update');
-});
-
-autoUpdater.on('update-available', (info) => {
-    console.log('Update available.');
-    log.info('Update available');
-
-})
-autoUpdater.on('update-not-available', (info) => {
-    console.log('Update not available.');
-    log.info('Upate not available');
-
-})
-autoUpdater.on('error', (err) => {
-    console.log('Error in auto-updater. ' + err);
-    log.info('Error in auto-updater. ' + err);
-})
-autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Download speed: " + progressObj.bytesPerSecond;
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-    console.log(log_message);
-    log.info(log_message);
-})
-autoUpdater.on('update-downloaded', (info) => {
-    console.log('Update downloaded');
-    log.info('Update downloaded');
-});
-
-documet.getElementById('updateButton').addEventListener('click', () => {
-    autoUpdater.checkForUpdatesAndNotify();
-});
-// UPDATER STUFF
+import { ipcRenderer } from 'electron';
 
 
 // References to DOM elements
@@ -96,3 +53,27 @@ serverButton.addEventListener('click', setUrl);
 
 // Draw the version number
 versionSpan.innerText = packageJson.version.toString();
+
+ipcRenderer.on('ready', function(event, text) {
+    console.log('ipc renderer actually works');
+});
+
+ipcRenderer.on('updateAvailable', function(event, text) {
+    console.log('updateAvailable');
+});
+
+ipcRenderer.on('updateNotAvailabe', function(event, text) {
+    console.log('updateNotAvailabe');
+});
+
+ipcRenderer.on('updateError', function(event, text) {
+    console.log('updateError');
+});
+
+ipcRenderer.on('updateReady', function(event, text) {
+    console.log('updateReady');
+});
+
+ipcRenderer.on('updateProgress', function(event, text) {
+    console.log(text);
+});

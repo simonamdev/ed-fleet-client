@@ -43,5 +43,5 @@ const setUrl = () => {
 // Set the default value for the URL
 // TODO: Replace this according to the process env variable for production
 serverInput.value = 'http://localhost:3000/';
-// Attach event to button to check connection
+// Attach event to button to set URL
 serverButton.addEventListener('click', setUrl);

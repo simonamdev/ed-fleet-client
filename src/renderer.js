@@ -54,30 +54,6 @@ serverButton.addEventListener('click', setUrl);
 // Draw the version number
 versionSpan.innerText = packageJson.version.toString();
 
-ipcRenderer.on('ready', function(event, text) {
-    console.log('ipc renderer actually works');
-});
-
-ipcRenderer.on('updateAvailable', function(event, text) {
-    console.log('updateAvailable');
-});
-
-ipcRenderer.on('updateCheck', function(event, text) {
-    console.log('updateCheck');
-});
-
-ipcRenderer.on('updateNotAvailabe', function(event, text) {
-    console.log('updateNotAvailabe');
-});
-
-ipcRenderer.on('updateError', function(event, text) {
-    console.log('updateError: ' + text);
-});
-
-ipcRenderer.on('updateReady', function(event, text) {
-    console.log('updateReady');
-});
-
-ipcRenderer.on('updateProgress', function(event, text) {
-    console.log(text);
+ipcRenderer.on('ready', (event) => {
+    console.log('IPC Renderer operational');
 });

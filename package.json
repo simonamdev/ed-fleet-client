@@ -14,15 +14,6 @@
   "keywords": [],
   "author": "Purrcat259",
   "license": "MIT",
-  "build": {
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "purrcat259",
-        "repo": "ed-fleet-client"
-      }
-    ]
-  },
   "config": {
     "forge": {
       "config": {
@@ -30,7 +21,7 @@
       },
       "make_targets": {
         "win32": [
-          "nsis"
+          "squirrel"
         ]
       },
       "electronPackagerConfig": {
@@ -58,9 +49,7 @@
   "dependencies": {
     "ed-logwatcher": "^0.3.1",
     "electron-compile": "^6.4.2",
-    "electron-squirrel-startup": "^1.0.0",
-    "electron-updater": "^2.15.0",
-    "electron-log": "^2.2.11"
+    "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",

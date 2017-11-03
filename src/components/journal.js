@@ -16,10 +16,14 @@ export default class Journal {
     init() {
         let self = this;
         // Setup references to DOM elements
-        self.dataCountEl = document.getElementById('dataCount');
+        self.dataCountEl = document.getElementById('requestsCount');
+        self.errorCountEl = document.getElementById('errorCount');
         self.lastEventEl = document.getElementById('lastEvent');
         self.watcherStateEl = document.getElementById('watcherState');
         self.serverStateEl = document.getElementById('serverState');
+        self.startButtonEl = document.getElementById('startButton');
+        self.stopButtonEl = document.getElementById('stopButton');
+        self.serverButtonEl = document.getElementById('serverButton');
         // Subscribe to watcher events
         self.watcher.on('watcherUpdate', (obs) => {
             // To avoid sending the whole file on startup, skip updating the state if
@@ -72,33 +76,29 @@ export default class Journal {
     }
 
     updateServerUi() {
-        this.serverStateEl.classList.remove('in-progress');
         this.serverStateEl.innerText = this.tracker.getConnectionState();
+        this.errorCountEl.innerText = this.tracker.getErrorCount();
     }
 
     updateWatcherUi() {
         if (this.tracker.getWatcherState()) {
-            this.watcherStateEl.classList.add('active');
-            this.watcherStateEl.classList.remove('inactive');
             this.watcherStateEl.innerText = 'Active';
+            this.startButtonEl.disabled = true;
+            this.stopButtonEl.disabled = false;
+            this.serverButtonEl.disabled = false;
         } else {
-            this.watcherStateEl.classList.add('inactive');
-            this.watcherStateEl.classList.remove('active');
             this.watcherStateEl.innerText = 'Inactive';
+            this.startButtonEl.disabled = false;
+            this.stopButtonEl.disabled = true;
+            this.serverButtonEl.disabled = true;
         }
     }
 
     checkConnection() {
-        // TODO: Set as spinner instead of text
-        this.tracker.setConnectionState('Connecting');
+        // this.tracker.setConnectionState('Connecting');
         this.updateServerUi();
-        this.serverStateEl.classList.remove('active');
-        this.serverStateEl.classList.remove('inactive');
-        this.serverStateEl.classList.add('in-progress');
         this.transmitter.checkLatency().then((response) => {
             this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
-            this.serverStateEl.classList.add('active');
-            this.serverStateEl.classList.remove('inactive');
             this.updateServerUi();
             if (!this.connectionCheck) {
                 let self = this;
@@ -108,8 +108,7 @@ export default class Journal {
             }
         }).catch((error) => {
             this.tracker.setConnectionState(error);
-            this.serverStateEl.classList.add('inactive');
-            this.serverStateEl.classList.remove('active');
+            this.tracker.addErrorCount(1);
             this.updateServerUi();
         });
     }

@@ -8,6 +8,7 @@ export default class JournalTracker {
         this.recentEvents = [];
         this.recentEventLimit = 5; // TODO: make this configurable
         this.connectionState = '';
+        this.errorCount = 0;
     }
 
     addLoadedEventsCount(count) {
@@ -61,5 +62,13 @@ export default class JournalTracker {
 
     getConnectionState() {
         return this.connectionState;
+    }
+
+    addErrorCount(count) {
+        this.errorCount += count;
+    }
+
+    getErrorCount() {
+        return this.errorCount;
     }
 }

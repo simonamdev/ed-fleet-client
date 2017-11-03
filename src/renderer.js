@@ -7,22 +7,16 @@ import { ipcRenderer } from 'electron';
 
 // References to DOM elements
 let pathInput = document.getElementById('pathInput');
-let pathButton = document.getElementById('pathButton');
+let startButton = document.getElementById('startButton');
+let stopButton = document.getElementById('stopButton');
 
 let serverInput = document.getElementById('serverInput');
 let serverButton = document.getElementById('serverButton');
 
-let versionSpan = document.getElementById('version');
+let versionEl = document.getElementById('version');
 
 // Global reference to journal to stop user from starting more than one
 let journal;
-
-const startWatcher = () => {
-    journal = new Journal(pathInput.value, serverInput.value);
-    if (!journal.isActive()) {
-        journal.startWatcher();
-    }
-};
 
 // Add default directory to input
 let defaultPath = path.join(
@@ -34,7 +28,18 @@ let defaultPath = path.join(
 // Set default value to default path in the input field
 pathInput.value = defaultPath;
 // Attach event to button to start watcher
-pathButton.addEventListener('click', startWatcher);
+startButton.addEventListener('click', () => {
+    journal = new Journal(pathInput.value, serverInput.value);
+    if (!journal.isActive()) {
+        journal.startWatcher();
+    }
+});
+
+stopButton.addEventListener('click', () => {
+    if (journal && journal.isActive()) {
+        journal.stopWatcher();
+    }
+});
 
 const setUrl = () => {
     if (journal) {
@@ -52,7 +57,7 @@ serverInput.value = 'http://localhost:3000/';
 serverButton.addEventListener('click', setUrl);
 
 // Draw the version number
-versionSpan.innerText = packageJson.version.toString();
+versionEl.innerText = packageJson.version.toString();
 
 ipcRenderer.on('ready', (event) => {
     console.log('IPC Renderer operational');

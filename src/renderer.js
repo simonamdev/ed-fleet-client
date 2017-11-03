@@ -62,12 +62,16 @@ ipcRenderer.on('updateAvailable', function(event, text) {
     console.log('updateAvailable');
 });
 
+ipcRenderer.on('updateCheck', function(event, text) {
+    console.log('updateCheck');
+});
+
 ipcRenderer.on('updateNotAvailabe', function(event, text) {
     console.log('updateNotAvailabe');
 });
 
 ipcRenderer.on('updateError', function(event, text) {
-    console.log('updateError');
+    console.log('updateError: ' + text);
 });
 
 ipcRenderer.on('updateReady', function(event, text) {

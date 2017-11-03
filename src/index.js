@@ -7,7 +7,7 @@ const log = require('electron-log');
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
-  autoUpdater.quitAndInstall();
+  // autoUpdater.quitAndInstall();
 }
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -21,24 +21,35 @@ autoUpdater.logger.transports.file.level = "info";
 autoUpdater.on('checking-for-update', () => {
     console.log('Checking for update');
     log.info('Checking for update');
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('updateCheck');
+    });
 });
 
 autoUpdater.on('update-available', (info) => {
     console.log('Update available.');
     log.info('Update available');
-    mainWindow.webContents.send('updateAvailable')
-})
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('updateAvailable')
+    });
+});
+
 autoUpdater.on('update-not-available', (info) => {
     console.log('Update not available.');
     log.info('Upate not available');
-    mainWindow.webContents.send('updateNotAvailabe');
-})
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('updateNotAvailabe');
+    });
+});
+
 autoUpdater.on('error', (err) => {
     console.log('Error in auto-updater. ' + err);
     log.info('Error in auto-updater. ' + err);
-    mainWindow.webContents.send('updateError');
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('updateError', 'Error in auto-updater. ' + err);
+    });
+});
 
-})
 autoUpdater.on('download-progress', (progressObj) => {
     let log_message = "Download speed: " + progressObj.bytesPerSecond;
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
@@ -46,11 +57,14 @@ autoUpdater.on('download-progress', (progressObj) => {
     console.log(log_message);
     log.info(log_message);
     mainWindow.webContents.send('updateProgress', log_message);
-})
+});
+
 autoUpdater.on('update-downloaded', (info) => {
     console.log('Update downloaded');
     log.info('Update downloaded');
-    mainWindow.webContents.send('updateReady');
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('updateReady');
+    });
 });
 
 
@@ -99,9 +113,9 @@ app.on('window-all-closed', () => {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
+    // autoUpdater.quitAndInstall();
     app.quit();
   }
-  autoUpdater.quitAndInstall();
 });
 
 app.on('activate', () => {

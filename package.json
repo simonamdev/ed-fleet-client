@@ -1,8 +1,8 @@
 {
   "name": "ed-fleet-client",
   "productName": "ed-fleet-client",
-  "version": "0.1.0",
-  "description": "My Electron application description",
+  "version": "0.1.2",
+  "description": "Elite: Dangerous Fleet Tracker Client",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -17,7 +17,7 @@
   "config": {
     "forge": {
       "config": {
-          "asar": true
+        "asar": true
       },
       "make_targets": {
         "win32": [
@@ -50,7 +50,8 @@
     "ed-logwatcher": "^0.3.1",
     "electron-compile": "^6.4.2",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-updater": "^2.15.0"
+    "electron-updater": "^2.15.0",
+    "electron-log": "^2.2.11"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",

@@ -4,3 +4,4 @@ test/
 publish.bat
 make.bat
 dist/
+src/css/bulma.*

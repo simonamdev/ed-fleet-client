@@ -25,7 +25,10 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "npm"
+        "packageManager": "npm",
+        "prune": true,
+        "overwrite": true,
+        "asar": true
       },
       "electronWinstallerConfig": {
         "name": "ed_fleet_client"
@@ -34,7 +37,8 @@
       "electronInstallerRedhat": {},
       "github_repository": {
         "owner": "purrcat259",
-        "name": "ed-fleet-client"
+        "name": "ed-fleet-client",
+        "draft": true
       },
       "windowsStoreConfig": {
         "packageName": "",

@@ -10,61 +10,41 @@
         <div class="section container">
             <h1 class="title has-text-centered">Elite: Dangerous Fleet Tracker Client</h1>
         </div>
-        <div class="container">
-            <nav class="level">
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Watcher State</p>
-                        <p id="watcherState" class="title">Inactive</p>
-                    </div>
+        <div class="section container">
+            <div class="columns has-text-centered">
+                <div class="column">
+                    <p class="heading">Watcher State</p>
+                    <p id="watcherState" class="title">Inactive</p>
                 </div>
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Server State</p>
-                        <p id="serverState" class="title">N/A</p>
-                    </div>
+                <div class="column">
+                    <p class="heading">Server State</p>
+                    <p id="serverState" class="title">N/A</p>
                 </div>
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Client State</p>
-                        <p id="clientState" class="title">N/A</p>
-                    </div>
+                <div class="column">
+                    <p class="heading">Client Version</p>
+                    <p id="version" class="title">N/A</p>
                 </div>
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Client Version</p>
-                        <p id="version" class="title">N/A</p>
-                    </div>
-                </div>
-            </nav>
+            </div>
         </div>
-        <div class="section">
-            <nav class="level">
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Events loaded</p>
-                        <p id="dataCount" class="title">0</p>
-                    </div>
+        <div class="section container">
+            <div class="columns has-text-centered">
+                <div class="column">
+                    <p class="heading">Events Transmitted</p>
+                    <p id="requestsCount" class="title">0</p>
                 </div>
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Events Transmitted</p>
-                        <p id="requestsCount" class="title">0</p>
-                    </div>
+                <div class="column">
+                    <p class="heading">Error Count</p>
+                    <p id="errorCount" class="title">0</p>
                 </div>
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Error Count</p>
-                        <p id="errorCount" class="title">0</p>
-                    </div>
+                <div class="column">
+                    <p class="heading">Events loaded</p>
+                    <p id="dataCount" class="title">0</p>
                 </div>
-                <div class="level-item has-text-centered">
-                    <div>
-                        <p class="heading">Last Event</p>
-                        <p id="lastEvent" class="title">N/A</p>
-                    </div>
+                <div class="column">
+                    <p class="heading">Last Event</p>
+                    <p id="lastEvent" class="title">N/A</p>
                 </div>
-            </nav>
+            </div>
         </div>
         <div class="container">
             <div class="columns">
@@ -82,10 +62,11 @@
         <div class="container">
             <div class="columns">
                 <div class="column has-text-centered">
-                    <button id="pathButton" class="button">Start Watcher</button>
+                    <button id="startButton" class="button is-success">Start Watcher</button>
+                    <button id="stopButton" class="button is-danger">Stop Watcher</button>
                 </div>
                 <div class="column has-text-centered">
-                    <button id="serverButton" class="button">Set Fleet Uplink URL</button>
+                    <button id="serverButton" class="button is-info">Set Fleet Uplink URL</button>
                 </div>
             </div>
         </div>

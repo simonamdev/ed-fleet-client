@@ -90,7 +90,7 @@ export default class Journal {
 
     checkConnection() {
         // TODO: Set as spinner instead of text
-        this.tracker.setConnectionState('Attempting to connect');
+        this.tracker.setConnectionState('Connecting');
         this.updateServerUi();
         this.serverStateEl.classList.remove('active');
         this.serverStateEl.classList.remove('inactive');
@@ -107,7 +107,7 @@ export default class Journal {
                 }, 5000);
             }
         }).catch((error) => {
-            this.tracker.setConnectionState(`Unable to connect: ${error}`);
+            this.tracker.setConnectionState(error);
             this.serverStateEl.classList.add('inactive');
             this.serverStateEl.classList.remove('active');
             this.updateServerUi();

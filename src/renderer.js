@@ -1,6 +1,7 @@
 import os from 'os';
 import path from 'path';
 import Journal from './components/journal';
+import packageJson from '../package.json';
 
 // References to DOM elements
 let pathInput = document.getElementById('pathInput');
@@ -8,6 +9,8 @@ let pathButton = document.getElementById('pathButton');
 
 let serverInput = document.getElementById('serverInput');
 let serverButton = document.getElementById('serverButton');
+
+let versionSpan = document.getElementById('version');
 
 // Global reference to journal to stop user from starting more than one
 let journal;
@@ -45,3 +48,6 @@ const setUrl = () => {
 serverInput.value = 'http://localhost:3000/';
 // Attach event to button to set URL
 serverButton.addEventListener('click', setUrl);
+
+// Draw the version number
+versionSpan.innerText = packageJson.version.toString();

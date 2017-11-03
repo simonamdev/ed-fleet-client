@@ -1,7 +1,7 @@
 {
   "name": "ed-fleet-client",
   "productName": "ed-fleet-client",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Elite: Dangerous Fleet Tracker Client",
   "main": "src/index.js",
   "scripts": {

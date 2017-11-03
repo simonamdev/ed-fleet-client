@@ -1,9 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-import { autoUpdater } from "electron-updater";
-const log = require('electron-log');
 
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = "info";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -36,43 +32,11 @@ const createWindow = () => {
   });
 };
 
-// Updater stuff
-autoUpdater.on('checking-for-update', () => {
-    console.log('Checking for update');
-    log.info('Checking for update');
-});
-
-autoUpdater.on('update-available', (info) => {
-    console.log('Update available.');
-    log.info('Update available');
-
-})
-autoUpdater.on('update-not-available', (info) => {
-    console.log('Update not available.');
-    log.info('Upate not available');
-
-})
-autoUpdater.on('error', (err) => {
-    console.log('Error in auto-updater. ' + err);
-    log.info('Error in auto-updater. ' + err);
-})
-autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Download speed: " + progressObj.bytesPerSecond;
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-    console.log(log_message);
-    log.info(log_message);
-})
-autoUpdater.on('update-downloaded', (info) => {
-    console.log('Update downloaded');
-    log.info('Update downloaded');
-});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-    autoUpdater.checkForUpdatesAndNotify();
     createWindow();
 });
 

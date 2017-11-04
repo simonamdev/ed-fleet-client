@@ -91,12 +91,10 @@ export default class Journal {
             this.watcherStateEl.innerText = 'Active';
             this.startButtonEl.disabled = true;
             this.stopButtonEl.disabled = false;
-            this.serverButtonEl.disabled = false;
         } else {
             this.watcherStateEl.innerText = 'Inactive';
             this.startButtonEl.disabled = false;
             this.stopButtonEl.disabled = true;
-            this.serverButtonEl.disabled = true;
         }
     }
 

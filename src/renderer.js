@@ -52,15 +52,6 @@ stopButton.addEventListener('click', () => {
     }
 });
 
-const setUrl = () => {
-    if (journal) {
-        journal.setUrl(serverInput.value);
-        journal.checkConnection();
-    } else {
-        console.log('Watcher is inactive');
-    }
-};
-
 // Draw the version number
 versionEl.innerText = packageJson.version.toString();
 

@@ -30,6 +30,8 @@ export default class Journal {
         self.startButtonEl = document.getElementById('startButton');
         self.stopButtonEl = document.getElementById('stopButton');
         self.serverButtonEl = document.getElementById('serverButton');
+        // Setup connection check
+        self.checkConnection();
         // Subscribe to watcher events
         self.watcher.on('watcherUpdate', (obs) => {
             // To avoid sending the whole file on startup, skip updating the state if
@@ -52,7 +54,6 @@ export default class Journal {
                 }, 0, events);
             }
         });
-        // TODO: Subscribe to transmission events
     }
 
     updateSettings(path, url, commander, apiKey) {
@@ -81,7 +82,36 @@ export default class Journal {
         this.tracker.setWatcherState(false);
         this.updateWatcherUi();
         this.watcher.stop();
+        this.stopConnectionCheck();
         // TODO: Transmit event to server to stop tracking. Also add this when quit app happens
+    }
+
+    checkConnection() {
+        this.tracker.setConnectionState('Connecting');
+        this.updateServerUi();
+        this.transmitter.checkLatency().then((response) => {
+            this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
+            this.updateServerUi();
+            let self = this;
+            if (!this.connectionCheck) {
+                this.connectionCheck = setInterval(() => {
+                    self.checkConnection();
+                }, 5000);
+            }
+        }).catch((error) => {
+            this.tracker.setConnectionState(error);
+            this.tracker.addErrorCount(1);
+            this.updateServerUi();
+        });
+    }
+
+    stopConnectionCheck() {
+        if (this.connectionCheck) {
+            clearInterval(this.connectionCheck);
+            this.connectionCheck = null;
+            this.tracker.setConnectionState('Disconnected');
+            this.updateServerUi();
+        }
     }
 
     updateEventsTelemetry(data) {
@@ -109,25 +139,6 @@ export default class Journal {
             this.startButtonEl.disabled = false;
             this.stopButtonEl.disabled = true;
         }
-    }
-
-    checkConnection() {
-        // this.tracker.setConnectionState('Connecting');
-        this.updateServerUi();
-        this.transmitter.checkLatency().then((response) => {
-            this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
-            this.updateServerUi();
-            if (!this.connectionCheck) {
-                let self = this;
-                this.connectionCheck = setInterval(() => {
-                    self.checkConnection();
-                }, 5000);
-            }
-        }).catch((error) => {
-            this.tracker.setConnectionState(error);
-            this.tracker.addErrorCount(1);
-            this.updateServerUi();
-        });
     }
 
     isActive() {

@@ -11,7 +11,8 @@ let startButton = document.getElementById('startButton');
 let stopButton = document.getElementById('stopButton');
 
 let serverInput = document.getElementById('serverInput');
-let serverButton = document.getElementById('serverButton');
+let cmdrInput = document.getElementById('cmdrInput');
+let apiInput = document.getElementById('apiInput');
 
 let settingsButton = document.getElementById('settingsButton');
 let settingsModal = document.getElementById('settingsModal');
@@ -34,7 +35,12 @@ let defaultPath = path.join(
 
 // Attach event to button to start watcher
 startButton.addEventListener('click', () => {
-    journal = new Journal(pathInput.value, serverInput.value);
+    journal = new Journal(
+        pathInput.value,
+        serverInput.value,
+        cmdrInput.value,
+        apiInput.value
+    );
     if (!journal.isActive()) {
         journal.startWatcher();
     }
@@ -75,6 +81,7 @@ modalClose.addEventListener('click', () => {
     settingsModal.classList.remove('is-active');
 });
 
+// TODO: Validate fields are not empty
 settingsSaveButton.addEventListener('click', () => {
     // TODO: Save settings
     settingsModal.classList.remove('is-active');

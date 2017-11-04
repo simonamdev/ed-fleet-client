@@ -2,8 +2,10 @@ import url from 'url';
 import EventEmitter from 'events';
 
 export default class JournalTransmitter {
-    constructor(serverUrl) {
+    constructor(serverUrl, commander, apiKey) {
         this.url = serverUrl;
+        this.commander = commander;
+        this.apiKey = apiKey;
         this.latencyUrl = url.resolve(serverUrl, '/latency');
         this.eventsUrl = url.resolve(serverUrl, '/event');
     }
@@ -39,6 +41,7 @@ export default class JournalTransmitter {
             let request = new XMLHttpRequest();
             request.open('POST', this.eventsUrl, true);
             request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            request.setRequestHeader('API-KEY', this.apiKey);
 
             request.onload = () => {
                 if (request.status >= 200 && request.status < 400) {
@@ -61,7 +64,13 @@ export default class JournalTransmitter {
                 reject('Event sending error');
             };
 
-            request.send(JSON.stringify({ data }));
+            request.send(JSON.stringify(
+                {
+                    'data': data,
+                    'commander': this.commander,
+                    'timestamp': new Date()
+                }
+            ));
         });
     }
 }

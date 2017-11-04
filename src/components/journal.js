@@ -3,12 +3,18 @@ import JournalWatcher from './journal/journal-watcher';
 import JournalTransmitter from './journal/journal-transmitter';
 
 export default class Journal {
-    constructor(directory, url) {
+    constructor(directory, url, commander, apiKey) {
         this.directory = directory;
         this.url = url;
+        this.commander = commander;
+        this.apiKey = apiKey;
         this.tracker = new JournalTracker();
         this.watcher = new JournalWatcher(this.directory);
-        this.transmitter = new JournalTransmitter(this.url);
+        this.transmitter = new JournalTransmitter(
+            this.url,
+            this.commander,
+            this.apiKey
+        );
         this.connectionCheck = null;
         this.init();
     }

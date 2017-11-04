@@ -44,7 +44,7 @@
         </section>
         <div class="container">
             <div class="columns">
-                <div class="column has-text-centered">
+                <!-- <div class="column has-text-centered">
                     <p class="heading">Journal Directory</p>
                     <input id="pathInput" class="input narrow-input" type="text" value="" placeholder="Enter the path to the journal directory" />
 
@@ -52,19 +52,33 @@
                 <div class="column has-text-centered">
                     <p class="heading">Open Server Uplink</p>
                     <input id="serverInput" class="input narrow-input" type="url" value="" placeholder="Enter the fleet server URL" />
-                </div>
+                </div> -->
             </div>
         </div>
-        <div class="container">
-            <div class="columns">
-                <div class="column has-text-centered">
-                    <button id="startButton" class="button is-success">Start Watcher</button>
-                    <button id="stopButton" class="button is-danger" disabled>Stop Watcher</button>
-                </div>
-                <div class="column has-text-centered">
-                    <button id="serverButton" class="button is-info" disabled>Set Fleet Uplink URL</button>
+        <section class="section">
+            <div class="container">
+                <div class="columns">
+                    <div class="column has-text-centered">
+                        <button id="startButton" class="button is-success">Start Watcher</button>
+                    </div>
+                    <div class="column has-text-centered">
+                        <button id="stopButton" class="button is-danger" disabled>Stop Watcher</button>
+                    </div>
+                    <div class="column has-text-centered">
+                        <button id="settingsButton" class="button is-info">Settings</button>
+                    </div>
                 </div>
             </div>
+        </section>
+        <!-- Modal -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="card">
+                    <h1>Modal</h1>
+                </div>
+            </div>
+            <button id="modalClose" class="modal-close is-large" aria-label="close"></button>
         </div>
     </body>
     <script>require('./renderer.js');</script>

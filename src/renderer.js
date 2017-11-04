@@ -15,7 +15,9 @@ let serverButton = document.getElementById('serverButton');
 
 let settingsButton = document.getElementById('settingsButton');
 let settingsModal = document.getElementById('settingsModal');
+let settingsSaveButton = document.getElementById('settingsSave');
 let modalCloseButton = document.getElementById('modalClose');
+
 
 let versionEl = document.getElementById('version');
 
@@ -29,8 +31,7 @@ let defaultPath = path.join(
     'Frontier Developments',
     'Elite Dangerous'
 );
-// Set default value to default path in the input field
-// pathInput.value = defaultPath;
+
 // Attach event to button to start watcher
 startButton.addEventListener('click', () => {
     journal = new Journal(pathInput.value, serverInput.value);
@@ -54,20 +55,28 @@ const setUrl = () => {
     }
 };
 
-// Set the default value for the URL
-// TODO: Replace this according to the process env variable for production
-// serverInput.value = 'http://localhost:3000/';
-// Attach event to button to set URL
-// serverButton.addEventListener('click', setUrl);
-
 // Draw the version number
 versionEl.innerText = packageJson.version.toString();
 
-// Attach the events to open/close the modal
+// Setup Modal
+// Set the default value for the URL
+// TODO: Replace this according to the process env variable for production
+serverInput.value = 'http://localhost:3000/';
+
+// Set default value to default path in the input field
+pathInput.value = defaultPath;
+
+// Attach modal events
 settingsButton.addEventListener('click', () => {
     settingsModal.classList.add('is-active');
 });
+
 modalClose.addEventListener('click', () => {
+    settingsModal.classList.remove('is-active');
+});
+
+settingsSaveButton.addEventListener('click', () => {
+    // TODO: Save settings
     settingsModal.classList.remove('is-active');
 });
 

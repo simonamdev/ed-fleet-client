@@ -42,19 +42,6 @@
                 </div>
             </div>
         </section>
-        <div class="container">
-            <div class="columns">
-                <!-- <div class="column has-text-centered">
-                    <p class="heading">Journal Directory</p>
-                    <input id="pathInput" class="input narrow-input" type="text" value="" placeholder="Enter the path to the journal directory" />
-
-                </div>
-                <div class="column has-text-centered">
-                    <p class="heading">Open Server Uplink</p>
-                    <input id="serverInput" class="input narrow-input" type="url" value="" placeholder="Enter the fleet server URL" />
-                </div> -->
-            </div>
-        </div>
         <section class="section">
             <div class="container">
                 <div class="columns">
@@ -73,10 +60,35 @@
         <!-- Modal -->
         <div id="settingsModal" class="modal">
             <div class="modal-background"></div>
-            <div class="modal-content">
-                <div class="card">
-                    <h1>Modal</h1>
-                </div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h1 class="modal-card-title">Settings</h1>
+                </header>
+                <section class="modal-card-body">
+                    <div class="columns">
+                        <div class="column has-text-centered">
+                            <p class="heading">Journal Directory</p>
+                            <input id="pathInput" class="input narrow-input" type="text" value="" placeholder="Enter the path to the journal directory" />
+                        </div>
+                        <div class="column has-text-centered">
+                            <p class="heading">Server Uplink URL</p>
+                            <input id="serverInput" class="input narrow-input" type="url" value="" placeholder="Enter the fleet server URL" />
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column has-text-centered">
+                            <p class="heading">CMDR Name</p>
+                            <input id="cmdrInput" class="input narrow-input" type="text" value="" placeholder="Enter your CMDR name" />
+                        </div>
+                        <div class="column has-text-centered">
+                            <p class="heading">API Key</p>
+                            <input id="apiInput" class="input narrow-input" type="text" value="" placeholder="Enter your API key." />
+                        </div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button id="settingsSave" class="button">Save Settings</button>
+                </footer>
             </div>
             <button id="modalClose" class="modal-close is-large" aria-label="close"></button>
         </div>

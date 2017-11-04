@@ -92,17 +92,17 @@ export default class Journal {
         this.transmitter.checkLatency().then((response) => {
             this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
             this.updateServerUi();
-            let self = this;
-            if (!this.connectionCheck) {
-                this.connectionCheck = setInterval(() => {
-                    self.checkConnection();
-                }, 5000);
-            }
         }).catch((error) => {
             this.tracker.setConnectionState(error);
             this.tracker.addErrorCount(1);
             this.updateServerUi();
         });
+        let self = this;
+        if (!this.connectionCheck) {
+            this.connectionCheck = setInterval(() => {
+                self.checkConnection();
+            }, 5000);
+        }
     }
 
     stopConnectionCheck() {

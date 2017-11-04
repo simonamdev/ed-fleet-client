@@ -83,7 +83,14 @@ modalClose.addEventListener('click', () => {
 
 // TODO: Validate fields are not empty
 settingsSaveButton.addEventListener('click', () => {
-    // TODO: Save settings
+    if (journal) {
+        journal.updateSettings(
+            pathInput.value,
+            serverInput.value,
+            cmdrInput.value,
+            apiInput.value
+        );
+    }
     settingsModal.classList.remove('is-active');
 });
 

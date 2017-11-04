@@ -55,6 +55,18 @@ export default class Journal {
         // TODO: Subscribe to transmission events
     }
 
+    updateSettings(path, url, commander, apiKey) {
+        this.path = path;
+        this.url = url;
+        this.commander = commander;
+        this.apiKey = apiKey;
+        // Restart the watcher if it is active when settings are changed
+        if (this.isActive()) {
+            this.stopWatcher();
+            this.startWatcher();
+        }
+    }
+
     setUrl(url) {
         this.url = url;
     }
@@ -69,6 +81,7 @@ export default class Journal {
         this.tracker.setWatcherState(false);
         this.updateWatcherUi();
         this.watcher.stop();
+        // TODO: Transmit event to server to stop tracking. Also add this when quit app happens
     }
 
     updateEventsTelemetry(data) {

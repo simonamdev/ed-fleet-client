@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+import process from 'process';
 import JournalTracker from './journal/journal-tracker';
 import JournalWatcher from './journal/journal-watcher';
 import JournalTransmitter from './journal/journal-transmitter';
@@ -16,7 +19,6 @@ export default class Journal {
             this.apiKey
         );
         this.connectionCheck = null;
-        this.init();
     }
 
     init() {
@@ -62,10 +64,31 @@ export default class Journal {
         this.commander = commander;
         this.apiKey = apiKey;
         // Restart the watcher if it is active when settings are changed
+        this.saveSettings();
         if (this.isActive()) {
             this.stopWatcher();
             this.startWatcher();
         }
+    }
+
+    saveSettings() {
+        let settings = {
+            path: this.path,
+            url: this.url,
+            commander: this.commander,
+            apiKey: this.apiKey
+        };
+        console.log('Writing settings to file');
+        let settingsPath = path.join(
+            process.resourcesPath,
+            'settings.json'
+        );
+        fs.writeFile(settingsPath, JSON.stringify(settings), (err) => {
+            if (err) {
+                console.error('Unable to save settings to file');
+                console.error(err);
+            }
+        });
     }
 
     setUrl(url) {

@@ -109,6 +109,7 @@ export default class Journal {
         this.settings = settings;
         // Update the UI
         this.updateOptionsUi(settings);
+        this.updateButtonAvailability();
         // Restart the watcher if it is active when settings are changed
         if (this.isActive()) {
             this.stopWatcher();
@@ -207,6 +208,26 @@ export default class Journal {
         this.serverInputEl.value = settings.url;
         this.cmdrInputEl.value = settings.commander;
         this.apiInputEl.value = settings.apiKey;
+    }
+
+    // Disable start watcher button if the settings are not all valid
+    updateButtonAvailability() {
+        if (!this.settingsAreValid()) {
+            this.startButtonEl.disabled = true;
+        } else {
+            this.startButtonEl.disabled = false;
+        }
+    }
+
+    settingsAreValid() {
+        return !this.settingIsInvalid(this.settings.path) &&
+            !this.settingIsInvalid(this.settings.url) &&
+            !this.settingIsInvalid(this.settings.commander) &&
+            !this.settingIsInvalid(this.settings.apiKey);
+    }
+
+    settingIsInvalid(val) {
+        return (val == null || val === '');
     }
 
     isActive() {

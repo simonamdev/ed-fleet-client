@@ -50,16 +50,20 @@ export default class Journal {
         // Subscribe to watcher events
         self.watcher.on('watcherUpdate', (obs) => {
             // To avoid sending the whole file on startup, skip updating the state if
-            // the number of lines is greater than say 15
-            if (obs.length <= 15) {
-                this.updateEventsTelemetry(obs);
+            // the number of lines is greater than say 10
+            if (obs.length <= 10) {
+                self.updateRecentEvents(obs);
                 self.updateEventsUi();
                 let events = obs.slice();
                 setImmediate(() => {
                     for (let i = 0; i < events.length; i++) {
                         let ev = events[i];
                         setImmediate(() => {
-                            self.transmitter.sendEvent(ev).catch((err) => {
+                            self.transmitter.sendEvent(ev).then((response) => {
+                                // console.log(response);
+                                // Update the events transmitted count
+                                self.updateSuccessfulTransmissionCount(1);
+                            }).catch((err) => {
                                 if (ev) {
                                     console.error(`Error: ${err} sending event: ${ev.event}`);
                                 }
@@ -168,9 +172,12 @@ export default class Journal {
         }
     }
 
-    updateEventsTelemetry(data) {
-        this.tracker.addLoadedEventsCount(data.length);
+    updateRecentEvents(data) {
         this.tracker.addRecentEvents(data);
+    }
+
+    updateSuccessfulTransmissionCount(count) {
+        this.tracker.addLoadedEventsCount(count);
     }
 
     updateEventsUi() {

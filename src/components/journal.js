@@ -76,7 +76,6 @@ export default class Journal {
         if (this.settingsAvailable()) {
             console.log(`Loading in settings from ${this.settingsPath}`);
             let settings = JSON.parse(fs.readFileSync(this.settingsPath));
-            console.log(settings);
             this.updateSettings(
                 settings.path,
                 settings.url,

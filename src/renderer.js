@@ -18,7 +18,8 @@ let settingsSaveButton = document.getElementById('settingsSave');
 let modalCloseButton = document.getElementById('modalClose');
 
 
-let versionEl = document.getElementById('version');
+let clientVersionEl = document.getElementById('clientVersion');
+let serverVersionEl = document.getElementById('serverVersion');
 
 // Global reference to journal to stop user from starting more than one
 let settings = {
@@ -46,8 +47,15 @@ stopButton.addEventListener('click', () => {
     }
 });
 
-// Draw the version number
-versionEl.innerText = packageJson.version.toString();
+// TODO: Version checks and drawing
+// Draw the client version number taken from the package.json file
+clientVersionEl.innerText = packageJson.version.toString();
+
+// Setup server version check on watcher successful connection
+// TODO
+
+// Setup fleet name drawing on watcher successful connection
+// TODO
 
 // Setup Modal
 // Attach modal events

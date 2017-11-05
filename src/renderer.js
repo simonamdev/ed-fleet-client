@@ -23,7 +23,12 @@ let modalCloseButton = document.getElementById('modalClose');
 let versionEl = document.getElementById('version');
 
 // Global reference to journal to stop user from starting more than one
-let journal;
+let journal = new Journal(
+    pathInput.value,
+    serverInput.value,
+    cmdrInput.value,
+    apiInput.value
+);;
 
 // Add default directory to input
 let defaultPath = path.join(
@@ -35,13 +40,8 @@ let defaultPath = path.join(
 
 // Attach event to button to start watcher
 startButton.addEventListener('click', () => {
-    journal = new Journal(
-        pathInput.value,
-        serverInput.value,
-        cmdrInput.value,
-        apiInput.value
-    );
     if (!journal.isActive()) {
+        journal.init();
         journal.startWatcher();
     }
 });

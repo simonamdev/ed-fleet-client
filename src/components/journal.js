@@ -11,6 +11,10 @@ export default class Journal {
         this.url = url;
         this.commander = commander;
         this.apiKey = apiKey;
+        this.settingsPath = path.join(
+            process.resourcesPath,
+            'settings.json'
+        );
         this.tracker = new JournalTracker();
         this.watcher = new JournalWatcher(this.directory);
         this.transmitter = new JournalTransmitter(
@@ -19,19 +23,11 @@ export default class Journal {
             this.apiKey
         );
         this.connectionCheck = null;
+        this.setupDomReferences();
     }
 
     init() {
         let self = this;
-        // Setup references to DOM elements
-        self.dataCountEl = document.getElementById('requestsCount');
-        self.errorCountEl = document.getElementById('errorCount');
-        self.lastEventEl = document.getElementById('lastEvent');
-        self.watcherStateEl = document.getElementById('watcherState');
-        self.serverStateEl = document.getElementById('serverState');
-        self.startButtonEl = document.getElementById('startButton');
-        self.stopButtonEl = document.getElementById('stopButton');
-        self.serverButtonEl = document.getElementById('serverButton');
         // Setup connection check
         self.checkConnection();
         // Subscribe to watcher events
@@ -58,13 +54,57 @@ export default class Journal {
         });
     }
 
+    setupDomReferences() {
+        // Setup references to DOM elements
+        this.dataCountEl = document.getElementById('requestsCount');
+        this.errorCountEl = document.getElementById('errorCount');
+        this.lastEventEl = document.getElementById('lastEvent');
+        this.watcherStateEl = document.getElementById('watcherState');
+        this.serverStateEl = document.getElementById('serverState');
+        // Buttons
+        this.startButtonEl = document.getElementById('startButton');
+        this.stopButtonEl = document.getElementById('stopButton');
+        this.serverButtonEl = document.getElementById('serverButton');
+        // Inputs
+        this.pathInputEl = document.getElementById('pathInput');
+        this.serverInputEl = document.getElementById('serverInput');
+        this.cmdrInputEl = document.getElementById('cmdrInput');
+        this.apiInputEl = document.getElementById('apiInput');
+    }
+
+    loadSettingsIfAvailable() {
+        if (this.settingsAvailable()) {
+            console.log(`Loading in settings from ${this.settingsPath}`);
+            let settings = JSON.parse(fs.readFileSync(this.settingsPath));
+            console.log(settings);
+            this.updateSettings(
+                settings.path,
+                settings.url,
+                settings.commander,
+                settings.apiKey
+            );
+        }
+    }
+
+    settingsAvailable() {
+        return fs.existsSync(this.settingsPath);
+    }
+
     updateSettings(path, url, commander, apiKey) {
         this.path = path;
         this.url = url;
         this.commander = commander;
         this.apiKey = apiKey;
+        // Update the UI
+        this.updateOptionsUi(
+            {
+                path: path,
+                url: url,
+                commander: commander,
+                apiKey: apiKey
+            }
+        );
         // Restart the watcher if it is active when settings are changed
-        this.saveSettings();
         if (this.isActive()) {
             this.stopWatcher();
             this.startWatcher();
@@ -79,11 +119,7 @@ export default class Journal {
             apiKey: this.apiKey
         };
         console.log('Writing settings to file');
-        let settingsPath = path.join(
-            process.resourcesPath,
-            'settings.json'
-        );
-        fs.writeFile(settingsPath, JSON.stringify(settings), (err) => {
+        fs.writeFile(this.settingsPath, JSON.stringify(settings), (err) => {
             if (err) {
                 console.error('Unable to save settings to file');
                 console.error(err);
@@ -162,6 +198,13 @@ export default class Journal {
             this.startButtonEl.disabled = false;
             this.stopButtonEl.disabled = true;
         }
+    }
+
+    updateOptionsUi(settings) {
+        this.pathInputEl.value = settings.path;
+        this.serverInputEl.value = settings.url;
+        this.cmdrInputEl.value = settings.commander;
+        this.apiInputEl.value = settings.apiKey;
     }
 
     isActive() {

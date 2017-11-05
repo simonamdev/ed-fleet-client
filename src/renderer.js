@@ -28,7 +28,10 @@ let journal = new Journal(
     serverInput.value,
     cmdrInput.value,
     apiInput.value
-);;
+);
+
+// Load in the settings if they are available
+journal.loadSettingsIfAvailable();
 
 // Add default directory to input
 let defaultPath = path.join(
@@ -81,6 +84,7 @@ settingsSaveButton.addEventListener('click', () => {
             cmdrInput.value,
             apiInput.value
         );
+        journal.saveSettings();
     }
     settingsModal.classList.remove('is-active');
 });

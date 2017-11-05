@@ -1,3 +1,4 @@
+import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
@@ -5,25 +6,41 @@ import JournalTracker from './journal/journal-tracker';
 import JournalWatcher from './journal/journal-watcher';
 import JournalTransmitter from './journal/journal-transmitter';
 
+/*
+Settings:
+1) path
+2) url
+3) commander
+4) apiKey
+*/
+
 export default class Journal {
-    constructor(directory, url, commander, apiKey) {
-        this.directory = directory;
-        this.url = url;
-        this.commander = commander;
-        this.apiKey = apiKey;
+    constructor(settings) {
+        this.settings = settings;
+        // Setup defaults
+        this.settings.path = this.settings.path || path.join(
+            os.homedir(),
+            'Saved Games',
+            'Frontier Developments',
+            'Elite Dangerous'
+        );
+        this.settings.url = this.settings.url || 'http://localhost:3000/';
+        // Setup path
         this.settingsPath = path.join(
             process.resourcesPath,
             'settings.json'
         );
         this.tracker = new JournalTracker();
-        this.watcher = new JournalWatcher(this.directory);
+        this.watcher = new JournalWatcher(this.settings.path);
         this.transmitter = new JournalTransmitter(
-            this.url,
-            this.commander,
-            this.apiKey
+            this.settings.url,
+            this.settings.commander,
+            this.settings.apiKey
         );
         this.connectionCheck = null;
         this.setupDomReferences();
+        // Update the settings menu
+        this.updateOptionsUi(settings);
     }
 
     init() {
@@ -76,12 +93,7 @@ export default class Journal {
         if (this.settingsAvailable()) {
             console.log(`Loading in settings from ${this.settingsPath}`);
             let settings = JSON.parse(fs.readFileSync(this.settingsPath));
-            this.updateSettings(
-                settings.path,
-                settings.url,
-                settings.commander,
-                settings.apiKey
-            );
+            this.updateSettings(settings);
         }
     }
 
@@ -89,20 +101,10 @@ export default class Journal {
         return fs.existsSync(this.settingsPath);
     }
 
-    updateSettings(path, url, commander, apiKey) {
-        this.path = path;
-        this.url = url;
-        this.commander = commander;
-        this.apiKey = apiKey;
+    updateSettings(settings) {
+        this.settings = settings;
         // Update the UI
-        this.updateOptionsUi(
-            {
-                path: path,
-                url: url,
-                commander: commander,
-                apiKey: apiKey
-            }
-        );
+        this.updateOptionsUi(settings);
         // Restart the watcher if it is active when settings are changed
         if (this.isActive()) {
             this.stopWatcher();
@@ -111,14 +113,8 @@ export default class Journal {
     }
 
     saveSettings() {
-        let settings = {
-            path: this.path,
-            url: this.url,
-            commander: this.commander,
-            apiKey: this.apiKey
-        };
         console.log('Writing settings to file');
-        fs.writeFile(this.settingsPath, JSON.stringify(settings), (err) => {
+        fs.writeFile(this.settingsPath, JSON.stringify(this.settings), (err) => {
             if (err) {
                 console.error('Unable to save settings to file');
                 console.error(err);

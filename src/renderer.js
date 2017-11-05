@@ -1,5 +1,3 @@
-import os from 'os';
-import path from 'path';
 import Journal from './components/journal';
 import packageJson from '../package.json';
 import { ipcRenderer } from 'electron';
@@ -23,23 +21,16 @@ let modalCloseButton = document.getElementById('modalClose');
 let versionEl = document.getElementById('version');
 
 // Global reference to journal to stop user from starting more than one
-let journal = new Journal(
-    pathInput.value,
-    serverInput.value,
-    cmdrInput.value,
-    apiInput.value
-);
+let settings = {
+    path: pathInput.value,
+    url: serverInput.value,
+    commander: cmdrInput.value,
+    apiKey: apiInput.value
+};
+let journal = new Journal(settings);
 
 // Load in the settings if they are available
 journal.loadSettingsIfAvailable();
-
-// Add default directory to input
-let defaultPath = path.join(
-    os.homedir(),
-    'Saved Games',
-    'Frontier Developments',
-    'Elite Dangerous'
-);
 
 // Attach event to button to start watcher
 startButton.addEventListener('click', () => {
@@ -59,12 +50,6 @@ stopButton.addEventListener('click', () => {
 versionEl.innerText = packageJson.version.toString();
 
 // Setup Modal
-// Set the default value for the URL
-// TODO: Replace this according to the process env variable for production
-serverInput.value = 'http://localhost:3000/';
-
-// Set default value to default path in the input field
-pathInput.value = defaultPath;
 
 // Attach modal events
 settingsButton.addEventListener('click', () => {
@@ -78,12 +63,13 @@ modalClose.addEventListener('click', () => {
 // TODO: Validate fields are not empty
 settingsSaveButton.addEventListener('click', () => {
     if (journal) {
-        journal.updateSettings(
-            pathInput.value,
-            serverInput.value,
-            cmdrInput.value,
-            apiInput.value
-        );
+        let settings = {
+            path: pathInput.value,
+            url: serverInput.value,
+            commander: cmdrInput.value,
+            apiKey: apiInput.value
+        };
+        journal.updateSettings(settings);
         journal.saveSettings();
     }
     settingsModal.classList.remove('is-active');

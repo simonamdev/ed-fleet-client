@@ -214,8 +214,10 @@ export default class Journal {
     updateButtonAvailability() {
         if (!this.settingsAreValid()) {
             this.startButtonEl.disabled = true;
+            this.startButtonEl.title = 'Some settings are invalid, fill them before starting the watcher';
         } else {
             this.startButtonEl.disabled = false;
+            this.startButtonEl.title = '';
         }
     }
 

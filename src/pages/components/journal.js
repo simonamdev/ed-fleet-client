@@ -92,83 +92,36 @@ export default class Journal extends EventEmitter {
         }
     }
 
-    setUrl(url) {
-        this.url = url;
-    }
-
     start() {
         console.log('Start Journal Watcher');
-        this.tracker.setWatcherState(true);
-        this.updateWatcherUi();
         this.watcher.init();
+        this.active = true;
     }
 
     stop() {
         console.log('Stop Journal Watcher');
-        this.tracker.setWatcherState(false);
-        this.updateWatcherUi();
         this.watcher.stop();
         this.stopConnectionCheck();
+        this.active = false;
         // TODO: Transmit event to server to stop tracking. Also add this when quit app happens
     }
 
-    checkConnection() {
-        this.tracker.setConnectionState('Connecting');
-        this.updateServerUi();
+    checkLatency() {
         this.transmitter.checkLatency().then((response) => {
-            this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
-            this.updateServerUi();
+            this.state.setConnectionState(`Latency: ${response.latency}ms`);
+            this.emit('serverUpdate', this.state);
         }).catch((error) => {
-            this.tracker.setConnectionState(error);
-            this.tracker.addErrorCount(1);
-            this.updateServerUi();
+            this.state.setConnectionState('Request Error');
+            this.state.addErrorCount(1);
+            this.emit('serverUpdate', this.state);
         });
-        let self = this;
-        if (!this.connectionCheck) {
-            this.connectionCheck = setInterval(() => {
-                self.checkConnection();
-            }, 5000);
-        }
-    }
-
-    stopConnectionCheck() {
-        if (this.connectionCheck) {
-            clearInterval(this.connectionCheck);
-            this.connectionCheck = null;
-            this.tracker.setConnectionState('Disconnected');
-            this.updateServerUi();
-        }
     }
 
     updateRecentEvents(data) {
-        this.tracker.addRecentEvents(data);
-    }
-
-    updateServerUi() {
-        this.serverStateEl.innerText = this.tracker.getConnectionState();
-        this.errorCountEl.innerText = this.tracker.getErrorCount();
-    }
-
-    updateWatcherUi() {
-        if (this.tracker.getWatcherState()) {
-            this.watcherStateEl.innerText = 'Active';
-            this.startButtonEl.disabled = true;
-            this.stopButtonEl.disabled = false;
-        } else {
-            this.watcherStateEl.innerText = 'Inactive';
-            this.startButtonEl.disabled = false;
-            this.stopButtonEl.disabled = true;
-        }
-    }
-
-    updateOptionsUi(settings) {
-        this.pathInputEl.value = settings.path;
-        this.serverInputEl.value = settings.url;
-        this.cmdrInputEl.value = settings.commander;
-        this.apiInputEl.value = settings.apiKey;
+        this.state.addRecentEvents(data);
     }
 
     isActive() {
-        return this.tracker.getWatcherState();
+        return this.active;
     }
 }

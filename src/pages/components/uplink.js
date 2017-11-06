@@ -58,34 +58,29 @@ export default class Uplink {
     start() {
         if (!this.journal.isActive()) {
             this.active = true;
+            // Set label to active
+            this.watcherStateEl.innerText = 'Active';
             // Switch button to active
             this.startButtonEl.classList.remove('is-success');
             this.startButtonEl.classList.add('is-danger');
-            this.startButtonEl.innerText = 'Stop Watcher';
-
-            // TODO: Subscribe to tracker events and update accordingly
-
-            // this.tracker.setWatcherState(true);
-            // this.updateWatcherUi();
-            // this.watcher.init();
-
+            this.startButtonEl.innerText = 'Close Uplink';
             // Start tracking journal
             this.journal.start();
+            // Start checking latency
+            this.checkConnection();
         }
     }
 
     stop() {
         if (this.journal.isActive()) {
+            // Set label to inactive
+            this.watcherStateEl.innerText = 'Inactive';
             // Switch button to inactive
             this.startButtonEl.classList.add('is-success');
             this.startButtonEl.classList.remove('is-danger');
             this.startButtonEl.innerText = 'Start Watcher';
-
-            // this.tracker.setWatcherState(false);
-
-            // this.updateWatcherUi();
-            // this.watcher.stop();
-            // this.stopConnectionCheck();
+            // Stop checking the latency to the server
+            this.stopConnectionCheck();
             this.active = false;
         }
     }
@@ -95,33 +90,42 @@ export default class Uplink {
     }
 
     subscribeToUiUpdates() {
-        this.journal.on('eventsUpdate', (state) => {
-            this.dataCountEl.innerText = state.getEventCount();
-            this.lastEventEl.innerText = state.getLastEvent().event;
+        let self = this;
+        self.journal.on('eventsUpdate', (state) => {
+            self.updateEventsUi(state);
+        });
+        self.journal.on('serverUpdate', (state) => {
+            self.updateServerUi(state);
         });
     }
 
     updateEventsUi(state) {
-
+        this.dataCountEl.innerText = state.getEventCount();
+        this.lastEventEl.innerText = state.getLastEvent().event;
     }
 
     checkConnection() {
-        // this.tracker.setConnectionState('Connecting');
-        // this.updateServerUi();
-        // this.transmitter.checkLatency().then((response) => {
-        //     this.tracker.setConnectionState(`Latency: ${response.latency}ms`);
-        //     this.updateServerUi();
-        // }).catch((error) => {
-        //     this.tracker.setConnectionState(error);
-        //     this.tracker.addErrorCount(1);
-        //     this.updateServerUi();
-        // });
+        this.serverStateEl.innerText = 'Connecting';
+        this.journal.checkLatency();
         let self = this;
         if (!this.connectionCheck) {
             this.connectionCheck = setInterval(() => {
-                self.checkConnection();
+                self.journal.checkLatency();
             }, 5000);
         }
+    }
+
+    stopConnectionCheck() {
+        if (this.connectionCheck) {
+            clearInterval(this.connectionCheck);
+            this.connectionCheck = null;
+            this.serverStateEl.innerText = 'Disconnected';
+        }
+    }
+
+    updateServerUi(state) {
+        this.serverStateEl.innerText = state.getConnectionState();
+        this.errorCountEl.innerText = state.getErrorCount();
     }
 
     settingsFileAvailable() {

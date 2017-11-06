@@ -13,7 +13,7 @@ const createWindow = () => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800,
-        height: 550,
+        height: 600,
     });
 
     // and load the index.html of the app.
@@ -42,7 +42,6 @@ app.on('ready', () => {
         mainWindow.webContents.send('ready');
     });
 });
-
 
 
 // Quit when all windows are closed.

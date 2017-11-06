@@ -62,13 +62,6 @@ const validateOnContent = (e) => {
 };
 
 // TODO: Move to settings file
-// Attach validation events
-// [pathInput, serverInput, cmdrInput, apiInput].forEach((inputEl) => {
-//     validateOnContent(inputEl);
-//     inputEl.addEventListener('input', validateOnContent);
-// });
-
-// TODO: Move to settings file
 settingsSaveButton.addEventListener('click', () => {
     if (journal) {
         let settings = {

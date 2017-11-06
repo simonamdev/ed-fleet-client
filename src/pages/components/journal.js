@@ -79,8 +79,7 @@ export default class Journal {
         }
     }
 
-    // TODO: Move to settings file
-
+    // UPDATE THIS TO GET DATA FROM FILE ONLY
     updateSettings(settings) {
         this.settings = settings;
         // Update the UI
@@ -91,17 +90,6 @@ export default class Journal {
             this.stopWatcher();
             this.startWatcher();
         }
-    }
-
-    // TODO: Move to settings file
-    saveSettings() {
-        console.log('Writing settings to file');
-        fs.writeFile(this.settingsPath, JSON.stringify(this.settings), (err) => {
-            if (err) {
-                console.error('Unable to save settings to file');
-                console.error(err);
-            }
-        });
     }
 
     setUrl(url) {
@@ -187,30 +175,6 @@ export default class Journal {
         this.serverInputEl.value = settings.url;
         this.cmdrInputEl.value = settings.commander;
         this.apiInputEl.value = settings.apiKey;
-    }
-
-    // Disable start watcher button if the settings are not all valid
-    updateButtonAvailability() {
-        if (!this.settingsAreValid()) {
-            this.startButtonEl.disabled = true;
-            this.startButtonEl.title = 'Some settings are invalid, fill them before starting the watcher';
-        } else {
-            this.startButtonEl.disabled = false;
-            this.startButtonEl.title = '';
-        }
-    }
-
-    // TODO: Move to settings file
-    settingsAreValid() {
-        return !this.settingIsInvalid(this.settings.path) &&
-            !this.settingIsInvalid(this.settings.url) &&
-            !this.settingIsInvalid(this.settings.commander) &&
-            !this.settingIsInvalid(this.settings.apiKey);
-    }
-
-    // TODO: Move to settings file
-    settingIsInvalid(val) {
-        return (val == null || val === '');
     }
 
     isActive() {

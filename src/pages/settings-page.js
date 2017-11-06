@@ -1,4 +1,5 @@
 import Settings from './components/settings';
 
+console.log('Initialising Settings page');
 let settings = new Settings();
-console.log(settings);
+settings.init();

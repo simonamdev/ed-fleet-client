@@ -1,7 +1,6 @@
-import packageJson from '../package.json';
+import packageJson from '../../package.json';
 import { ipcRenderer } from 'electron';
 import Uplink from './components/uplink';
-import Survey from './components/survey';
 import Settings from './components/settings';
 import About from './components/settings';
 
@@ -89,3 +88,5 @@ settingsSaveButton.addEventListener('click', () => {
 ipcRenderer.on('ready', (event) => {
     console.log('IPC Renderer operational');
 });
+
+console.log('yo');

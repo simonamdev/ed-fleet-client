@@ -1,8 +1,6 @@
 import packageJson from '../../package.json';
 import { ipcRenderer } from 'electron';
 import Uplink from './components/uplink';
-import Settings from './components/settings';
-import About from './components/settings';
 
 // TODO: Move DOM references into a separate class
 // References to DOM elements

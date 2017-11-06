@@ -40,18 +40,21 @@ export default class Settings {
             this.cmdrInputEl,
             this.apiInputEl
         ];
+        let self = this;
         inputElements.forEach((inputEl) => {
-            this.validateOnContent(inputEl);
+            self.validateOnContent(inputEl);
             inputEl.addEventListener('input', this.validateOnContent.bind(this));
         });
         // Attach event to save button
-        this.saveButtonEl.addEventListener('click', () => {
+        self.saveButtonEl.addEventListener('click', () => {
             let settings = {
-                path: this.pathInputEl.value,
-                url: this.serverInputEl.value,
-                commander: this.cmdrInputEl.value,
-                apiKey: this.apiInputEl.value
+                path: self.pathInputEl.value,
+                url: self.serverInputEl.value,
+                commander: self.cmdrInputEl.value,
+                apiKey: self.apiInputEl.value
             };
+            self.updateSettings(settings);
+            self.saveSettings();
         });
     }
 
@@ -67,6 +70,12 @@ export default class Settings {
                 // TODO: Setup proper notification on screen
                 console.error('Unable to save settings to file');
                 console.error(err);
+            } else {
+                // Update contents of button for a short while
+                this.saveButtonEl.innerText = 'Settings saved!';
+                setInterval(() => {
+                    this.saveButtonEl.innerText = 'Save Settings';
+                }, 2500);
             }
         });
     }

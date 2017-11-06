@@ -13,3 +13,9 @@ body: {
 .wide-button {
     width: 100%;
 }
+
+.loader-wrapper {
+    margin: 0 auto;
+    width: 25%;
+    height: 25%;
+}

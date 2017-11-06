@@ -2,7 +2,8 @@ import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
-import JournalTracker from './journal/journal-tracker';
+import EventEmitter from 'events';
+import JournalState from './journal/journal-state';
 import JournalWatcher from './journal/journal-watcher';
 import JournalTransmitter from './journal/journal-transmitter';
 
@@ -14,8 +15,10 @@ Settings:
 4) apiKey
 */
 
-export default class Journal {
+export default class Journal extends EventEmitter {
     constructor(settings) {
+        super();
+        this.active = false;
         this.settings = settings;
         // Setup defaults
         this.settings.path = settings ? settings.path : path.join(
@@ -26,16 +29,13 @@ export default class Journal {
         );
         this.settings.url = settings.url || 'http://localhost:3000/';
         // Setup internal classes
-        this.tracker = new JournalTracker();
+        this.state = new JournalState();
         this.watcher = new JournalWatcher(settings.path);
         this.transmitter = new JournalTransmitter(
             settings.url,
             settings.commander,
             settings.apiKey
         );
-        // TODO: Move this to settings menu
-        // Update the settings menu
-        // this.updateOptionsUi(settings);
     }
 
     init() {
@@ -49,7 +49,7 @@ export default class Journal {
             // the number of lines is greater than say 10
             if (obs.length <= 10) {
                 self.updateRecentEvents(obs);
-                self.updateEventsUi();
+                self.emit('eventsUpdate', this.state);
                 let events = obs.slice();
                 setImmediate(() => {
                     for (let i = 0; i < events.length; i++) {
@@ -58,7 +58,7 @@ export default class Journal {
                             self.transmitter.sendEvent(ev).then((response) => {
                                 // console.log(response);
                                 // Update the events transmitted count
-                                self.updateSuccessfulTransmissionCount(1);
+                                this.state.addLoadedEventsCount(1);
                             }).catch((err) => {
                                 if (ev) {
                                     console.error(`Error: ${err} sending event: ${ev.event}`);
@@ -142,15 +142,6 @@ export default class Journal {
 
     updateRecentEvents(data) {
         this.tracker.addRecentEvents(data);
-    }
-
-    updateSuccessfulTransmissionCount(count) {
-        this.tracker.addLoadedEventsCount(count);
-    }
-
-    updateEventsUi() {
-        this.dataCountEl.innerText = this.tracker.getEventCount();
-        this.lastEventEl.innerText = this.tracker.getLastEvent().event;
     }
 
     updateServerUi() {

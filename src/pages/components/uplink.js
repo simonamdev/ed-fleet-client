@@ -37,6 +37,7 @@ export default class Uplink {
             let settings = JSON.parse(fs.readFileSync(this.settingsPath));
             this.journal = new Journal(settings);
             this.journal.init();
+            this.subscribeToUiUpdates();
         } else {
             console.error('Settings file unavailable');
             // TODO: Disable start button
@@ -61,6 +62,9 @@ export default class Uplink {
             this.startButtonEl.classList.remove('is-success');
             this.startButtonEl.classList.add('is-danger');
             this.startButtonEl.innerText = 'Stop Watcher';
+
+            // TODO: Subscribe to tracker events and update accordingly
+
             // this.tracker.setWatcherState(true);
             // this.updateWatcherUi();
             // this.watcher.init();
@@ -88,6 +92,17 @@ export default class Uplink {
 
     isActive() {
         return this.active;
+    }
+
+    subscribeToUiUpdates() {
+        this.journal.on('eventsUpdate', (state) => {
+            this.dataCountEl.innerText = state.getEventCount();
+            this.lastEventEl.innerText = state.getLastEvent().event;
+        });
+    }
+
+    updateEventsUi(state) {
+
     }
 
     checkConnection() {

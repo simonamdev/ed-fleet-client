@@ -88,7 +88,7 @@ export default class Settings {
             'Saved Games',
             'Frontier Developments',
             'Elite Dangerous'
-        );;
+        );
         this.settings.url = this.settings.url || 'http://localhost:3000/';
         this.updateSaveButton();
     }

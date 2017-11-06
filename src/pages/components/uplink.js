@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Journal from './journal';
+import Settings from './settings';
 
 /*
 Uplink screen contents:
@@ -39,8 +40,8 @@ export default class Uplink {
             this.journal.init();
             this.subscribeToUiUpdates();
         } else {
-            console.error('Settings file unavailable');
-            // TODO: Disable start button
+            this.startButtonEl.disabled = true;
+            this.startButtonEl.innerText = 'Settings file unavailable - unable to open Uplink';
         }
     }
 
@@ -58,6 +59,8 @@ export default class Uplink {
     start() {
         if (!this.journal.isActive()) {
             this.active = true;
+            // Update journal settings
+            // this.journal.updateSettingsFromFile(); // TODO
             // Set label to active
             this.watcherStateEl.innerText = 'Active';
             // Switch button to active
@@ -78,9 +81,11 @@ export default class Uplink {
             // Switch button to inactive
             this.startButtonEl.classList.add('is-success');
             this.startButtonEl.classList.remove('is-danger');
-            this.startButtonEl.innerText = 'Start Watcher';
+            this.startButtonEl.innerText = 'Open Uplink';
             // Stop checking the latency to the server
             this.stopConnectionCheck();
+            // Disable the watcher
+            this.journal.stop();
             this.active = false;
         }
     }
@@ -100,7 +105,7 @@ export default class Uplink {
     }
 
     updateEventsUi(state) {
-        this.dataCountEl.innerText = state.getEventCount();
+        this.dataCountEl.innerText = state.getEventCountTransmitted();
         this.lastEventEl.innerText = state.getLastEvent().event;
     }
 

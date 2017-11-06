@@ -1,19 +1,11 @@
 export default class JournalState {
     constructor() {
         this.lastEvent = null;
-        this.eventsTransmitted = 0;
         this.recentEvents = [];
         this.recentEventLimit = 5; // TODO: make this configurable
         this.connectionState = '';
+        this.eventsTransmitted = 0;
         this.errorCount = 0;
-    }
-
-    addLoadedEventsCount(count) {
-        this.eventsLoaded += count;
-    }
-
-    getEventCount() {
-        return this.eventsLoaded;
     }
 
     addRecentEvents(events) {

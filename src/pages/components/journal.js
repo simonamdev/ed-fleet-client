@@ -58,7 +58,8 @@ export default class Journal extends EventEmitter {
                             self.transmitter.sendEvent(ev).then((response) => {
                                 // console.log(response);
                                 // Update the events transmitted count
-                                this.state.addLoadedEventsCount(1);
+                                this.state.addEventTransmittedCount(1);
+                                self.emit('eventsUpdate', this.state);
                             }).catch((err) => {
                                 if (ev) {
                                     console.error(`Error: ${err} sending event: ${ev.event}`);
@@ -80,7 +81,7 @@ export default class Journal extends EventEmitter {
     }
 
     // UPDATE THIS TO GET DATA FROM FILE ONLY
-    updateSettings(settings) {
+    updateSettingsFromFile() {
         this.settings = settings;
         // Update the UI
         this.updateOptionsUi(settings);
@@ -93,15 +94,14 @@ export default class Journal extends EventEmitter {
     }
 
     start() {
-        console.log('Start Journal Watcher');
+        console.log('Starting Journal Watcher');
         this.watcher.init();
         this.active = true;
     }
 
     stop() {
-        console.log('Stop Journal Watcher');
+        console.log('Stopping Journal Watcher');
         this.watcher.stop();
-        this.stopConnectionCheck();
         this.active = false;
         // TODO: Transmit event to server to stop tracking. Also add this when quit app happens
     }

@@ -13,6 +13,8 @@ Uplink screen contents:
 > Watcher Button
 */
 
+// TODO: Setup fleet name drawing on watcher successful connection
+
 const settingsPath = path.join(
     process.resourcesPath,
     'settings.json'

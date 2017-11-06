@@ -1,6 +1,6 @@
-import Journal from './components/journal';
 import packageJson from '../package.json';
 import { ipcRenderer } from 'electron';
+import Uplink from './components/uplink';
 
 // TODO: Move DOM references into a separate class
 // References to DOM elements
@@ -21,36 +21,28 @@ let clientVersionEl = document.getElementById('clientVersion');
 let serverVersionEl = document.getElementById('serverVersion');
 
 // Global reference to journal to stop user from starting more than one
-let settings = {
-    path: pathInput.value,
-    url: serverInput.value,
-    commander: cmdrInput.value,
-    apiKey: apiInput.value
-};
-let journal = new Journal(settings);
-
-// Load in the settings if they are available
-journal.loadSettingsIfAvailable();
+// let settings = {
+//     path: pathInput.value,
+//     url: serverInput.value,
+//     commander: cmdrInput.value,
+//     apiKey: apiInput.value
+// };
+let uplink = new Uplink();
 
 // Attach event to button to start watcher
 startButton.addEventListener('click', () => {
-    if (journal && !journal.isActive()) {
-        journal.init();
-        journal.startWatcher();
-        startButton.classList.remove('is-success');
-        startButton.classList.add('is-danger');
-        startButton.innerText = 'Stop Watcher';
+    if (uplink && !uplink.isActive()) {
+        uplink.init();
+        uplink.start();
     } else {
-        journal.stopWatcher();
-        startButton.classList.add('is-success');
-        startButton.classList.remove('is-danger');
-        startButton.innerText = 'Start Watcher';
+        uplink.stop();
     }
 });
 
+// TODO: Move to about page
 // TODO: Version checks and drawing
 // Draw the client version number taken from the package.json file
-clientVersionEl.innerText = packageJson.version.toString();
+// clientVersionEl.innerText = packageJson.version.toString();
 
 // Setup server version check on watcher successful connection
 // TODO
@@ -58,16 +50,7 @@ clientVersionEl.innerText = packageJson.version.toString();
 // Setup fleet name drawing on watcher successful connection
 // TODO
 
-// Setup Modal
-// Attach modal events
-settingsButton.addEventListener('click', () => {
-    settingsModal.classList.add('is-active');
-});
-
-modalClose.addEventListener('click', () => {
-    settingsModal.classList.remove('is-active');
-});
-
+// TODO: Move to settings file
 // Validate fields that are not empty
 const validateOnContent = (e) => {
     let element = e.target || e;
@@ -78,12 +61,14 @@ const validateOnContent = (e) => {
     }
 };
 
+// TODO: Move to settings file
 // Attach validation events
-[pathInput, serverInput, cmdrInput, apiInput].forEach((inputEl) => {
-    validateOnContent(inputEl);
-    inputEl.addEventListener('input', validateOnContent);
-});
+// [pathInput, serverInput, cmdrInput, apiInput].forEach((inputEl) => {
+//     validateOnContent(inputEl);
+//     inputEl.addEventListener('input', validateOnContent);
+// });
 
+// TODO: Move to settings file
 settingsSaveButton.addEventListener('click', () => {
     if (journal) {
         let settings = {

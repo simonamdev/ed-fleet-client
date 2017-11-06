@@ -18,35 +18,31 @@ export default class Journal {
     constructor(settings) {
         this.settings = settings;
         // Setup defaults
-        this.settings.path = this.settings.path || path.join(
+        this.settings.path = settings ? settings.path : path.join(
             os.homedir(),
             'Saved Games',
             'Frontier Developments',
             'Elite Dangerous'
         );
-        this.settings.url = this.settings.url || 'http://localhost:3000/';
-        // Setup path
-        this.settingsPath = path.join(
-            process.resourcesPath,
-            'settings.json'
-        );
+        this.settings.url = settings.url || 'http://localhost:3000/';
+        // Setup internal classes
         this.tracker = new JournalTracker();
-        this.watcher = new JournalWatcher(this.settings.path);
+        this.watcher = new JournalWatcher(settings.path);
         this.transmitter = new JournalTransmitter(
-            this.settings.url,
-            this.settings.commander,
-            this.settings.apiKey
+            settings.url,
+            settings.commander,
+            settings.apiKey
         );
-        this.connectionCheck = null;
-        this.setupDomReferences();
+        // TODO: Move this to settings menu
         // Update the settings menu
-        this.updateOptionsUi(settings);
+        // this.updateOptionsUi(settings);
     }
 
     init() {
+        console.log('Initialising Journal Watcher');
         let self = this;
         // Setup connection check
-        self.checkConnection();
+        // self.checkConnection();
         // Subscribe to watcher events
         self.watcher.on('watcherUpdate', (obs) => {
             // To avoid sending the whole file on startup, skip updating the state if
@@ -75,24 +71,6 @@ export default class Journal {
         });
     }
 
-    setupDomReferences() {
-        // Setup references to DOM elements
-        this.dataCountEl = document.getElementById('requestsCount');
-        this.errorCountEl = document.getElementById('errorCount');
-        this.lastEventEl = document.getElementById('lastEvent');
-        this.watcherStateEl = document.getElementById('watcherState');
-        this.serverStateEl = document.getElementById('serverState');
-        // Buttons
-        this.startButtonEl = document.getElementById('startButton');
-        this.stopButtonEl = document.getElementById('stopButton');
-        this.serverButtonEl = document.getElementById('serverButton');
-        // Inputs
-        this.pathInputEl = document.getElementById('pathInput');
-        this.serverInputEl = document.getElementById('serverInput');
-        this.cmdrInputEl = document.getElementById('cmdrInput');
-        this.apiInputEl = document.getElementById('apiInput');
-    }
-
     loadSettingsIfAvailable() {
         if (this.settingsAvailable()) {
             console.log(`Loading in settings from ${this.settingsPath}`);
@@ -101,9 +79,7 @@ export default class Journal {
         }
     }
 
-    settingsAvailable() {
-        return fs.existsSync(this.settingsPath);
-    }
+    // TODO: Move to settings file
 
     updateSettings(settings) {
         this.settings = settings;
@@ -117,6 +93,7 @@ export default class Journal {
         }
     }
 
+    // TODO: Move to settings file
     saveSettings() {
         console.log('Writing settings to file');
         fs.writeFile(this.settingsPath, JSON.stringify(this.settings), (err) => {
@@ -131,13 +108,15 @@ export default class Journal {
         this.url = url;
     }
 
-    startWatcher() {
+    start() {
+        console.log('Start Journal Watcher');
         this.tracker.setWatcherState(true);
         this.updateWatcherUi();
         this.watcher.init();
     }
 
-    stopWatcher() {
+    stop() {
+        console.log('Stop Journal Watcher');
         this.tracker.setWatcherState(false);
         this.updateWatcherUi();
         this.watcher.stop();
@@ -221,6 +200,7 @@ export default class Journal {
         }
     }
 
+    // TODO: Move to settings file
     settingsAreValid() {
         return !this.settingIsInvalid(this.settings.path) &&
             !this.settingIsInvalid(this.settings.url) &&
@@ -228,6 +208,7 @@ export default class Journal {
             !this.settingIsInvalid(this.settings.apiKey);
     }
 
+    // TODO: Move to settings file
     settingIsInvalid(val) {
         return (val == null || val === '');
     }

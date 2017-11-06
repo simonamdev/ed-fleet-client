@@ -9,3 +9,7 @@ body: {
 .section {
     padding: 2em;
 }
+
+.start-button {
+    width: 100%;
+}

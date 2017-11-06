@@ -5,7 +5,6 @@ import { ipcRenderer } from 'electron';
 // TODO: Move DOM references into a separate class
 // References to DOM elements
 let startButton = document.getElementById('startButton');
-let stopButton = document.getElementById('stopButton');
 
 let pathInput = document.getElementById('pathInput');
 let serverInput = document.getElementById('serverInput');
@@ -35,15 +34,17 @@ journal.loadSettingsIfAvailable();
 
 // Attach event to button to start watcher
 startButton.addEventListener('click', () => {
-    if (!journal.isActive()) {
+    if (journal && !journal.isActive()) {
         journal.init();
         journal.startWatcher();
-    }
-});
-
-stopButton.addEventListener('click', () => {
-    if (journal && journal.isActive()) {
+        startButton.classList.remove('is-success');
+        startButton.classList.add('is-danger');
+        startButton.innerText = 'Stop Watcher';
+    } else {
         journal.stopWatcher();
+        startButton.classList.add('is-success');
+        startButton.classList.remove('is-danger');
+        startButton.innerText = 'Start Watcher';
     }
 });
 

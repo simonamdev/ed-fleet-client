@@ -5,15 +5,6 @@ const settingIsInvalid = (val) => {
     return (val == null || val === '');
 };
 
-const validateOnContent = (e) => {
-    let element = e.target || e;
-    if (element.value && element.value.length) {
-        element.classList.remove('is-danger');
-    } else {
-        element.classList.add('is-danger');
-    }
-};
-
 export default class Settings {
     constructor(filePath) {
         this.path = filePath || path.join(
@@ -27,8 +18,8 @@ export default class Settings {
         this.setupDomReferences();
         this.attachDomEvents();
         this.loadExistingSettings();
-        this.updateSaveButton();
         this.updateFields();
+        this.updateSaveButton();
     }
 
     setupDomReferences() {
@@ -50,8 +41,8 @@ export default class Settings {
             this.apiInputEl
         ];
         inputElements.forEach((inputEl) => {
-            validateOnContent(inputEl);
-            inputEl.addEventListener('input', validateOnContent);
+            this.validateOnContent(inputEl);
+            inputEl.addEventListener('input', this.validateOnContent.bind(this));
         });
         // Attach event to save button
         this.saveButtonEl.addEventListener('click', () => {
@@ -93,17 +84,6 @@ export default class Settings {
         this.updateSaveButton();
     }
 
-    // Disable save button if the settings are not all valid
-    updateSaveButton() {
-        if (!this.settingsAreValid()) {
-            this.saveButtonEl.disabled = true;
-            this.saveButtonEl.title = 'Some settings are invalid, fill them before starting the watcher';
-        } else {
-            this.saveButtonEl.disabled = false;
-            this.saveButtonEl.title = '';
-        }
-    }
-
     updateFields() {
         this.pathInputEl.value = this.settings.path;
         this.serverInputEl.value = this.settings.url;
@@ -117,8 +97,31 @@ export default class Settings {
             this.apiInputEl
         ];
         inputElements.forEach((inputEl) => {
-            validateOnContent(inputEl);
+            this.validateOnContent(inputEl);
         });
+    }
+
+    validateOnContent(e) {
+        let element = e.target || e;
+        if (element.value && element.value.length) {
+            element.classList.remove('is-danger');
+        } else {
+            element.classList.add('is-danger');
+        }
+        this.updateSaveButton();
+    }
+
+    // Disable save button if the settings are not all valid
+    updateSaveButton() {
+        if (!this.fieldsAreValid()) {
+            this.saveButtonEl.disabled = true;
+            this.saveButtonEl.innerText = 'Settings Invalid - cannot save to file';
+            this.saveButtonEl.title = 'Some settings are invalid, fill them before starting the watcher';
+        } else {
+            this.saveButtonEl.disabled = false;
+            this.saveButtonEl.innerText = 'Save Settings';
+            this.saveButtonEl.title = '';
+        }
     }
 
     settingsAreValid() {
@@ -126,5 +129,20 @@ export default class Settings {
             !settingIsInvalid(this.settings.url) &&
             !settingIsInvalid(this.settings.commander) &&
             !settingIsInvalid(this.settings.apiKey);
+    }
+
+    fieldsAreValid() {
+        let inputElements = [
+            this.pathInputEl,
+            this.serverInputEl,
+            this.cmdrInputEl,
+            this.apiInputEl
+        ];
+        for (let i = 0; i < inputElements.length; i++) {
+            if (settingIsInvalid(inputElements[i].value)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

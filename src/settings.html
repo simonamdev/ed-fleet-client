@@ -8,7 +8,7 @@
     </head>
     <body>
         <section class="section container">
-            <h1 class="title has-text-centered">Elite: Dangerous Fleet Tracker Client</h1>
+            <h1 class="title has-text-centered">Client Settings</h1>
         </section>
         <div class="tabs is-fullwidth">
             <ul>
@@ -27,5 +27,42 @@
                 </li>
             </ul>
         </div>
+        <section class="section container">
+            <div class="columns">
+                <div class="column has-text-centered">
+                    <p class="heading">Client Version</p>
+                    <p id="clientVersion" class="title">N/A</p>
+                </div>
+                <div class="column has-text-centered">
+                    <p class="heading">Server Version</p>
+                    <p id="serverVersion" class="title">N/A</p>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column has-text-centered">
+                    <p class="heading">Journal Directory</p>
+                    <input id="pathInput" class="input narrow-input" type="text" value="" placeholder="Enter the path to the journal directory" />
+                </div>
+                <div class="column has-text-centered">
+                    <p class="heading">Server Uplink URL</p>
+                    <input id="serverInput" class="input narrow-input" type="url" value="" placeholder="Enter the fleet server URL" />
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column has-text-centered">
+                    <p class="heading">CMDR Name</p>
+                    <input id="cmdrInput" class="input narrow-input" type="text" value="" placeholder="Enter your CMDR name" />
+                </div>
+                <div class="column has-text-centered">
+                    <p class="heading">API Key</p>
+                    <input id="apiInput" class="input narrow-input" type="text" value="" placeholder="Enter your API key." />
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column has-text-centered">
+                    <button id="settingsSave" class="button wide-button">Save Settings</button>
+                </div>
+            </div>
+        </section>
     </body>
 </html>

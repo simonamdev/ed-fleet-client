@@ -1,9 +1,18 @@
+import os from 'os';
 import fs from 'fs';
 import path from 'path';
 
 const settingIsInvalid = (val) => {
     return (val == null || val === '');
 };
+
+const defaultUrl = 'http://localhost:3000/';
+const defaultPath = path.join(
+    os.homedir(),
+    'Saved Games',
+    'Frontier Developments',
+    'Elite Dangerous'
+);
 
 export default class Settings {
     constructor(filePath) {
@@ -59,8 +68,14 @@ export default class Settings {
     }
 
     loadExistingSettings() {
-        let settings = JSON.parse(fs.readFileSync(this.path));
-        this.updateSettings(settings);
+        if (this.areAvailable()) {
+            let settings = JSON.parse(fs.readFileSync(this.path));
+            this.updateSettings(settings);
+            return true;
+        } else {
+            console.error('Unable to load existing settings');
+            return false;
+        }
     }
 
     saveSettings() {
@@ -83,21 +98,16 @@ export default class Settings {
     updateSettings(settings) {
         this.settings = settings;
         // Set defaults if not avaiable
-        this.settings.path = this.settings.path || path.join(
-            os.homedir(),
-            'Saved Games',
-            'Frontier Developments',
-            'Elite Dangerous'
-        );
-        this.settings.url = this.settings.url || 'http://localhost:3000/';
-        this.updateSaveButton();
+        this.settings.path = this.settings.path || defaultPath;
+        this.settings.url = this.settings.url || defaultUrl;
     }
 
     updateFields() {
-        this.pathInputEl.value = this.settings.path;
-        this.serverInputEl.value = this.settings.url;
-        this.cmdrInputEl.value = this.settings.commander;
-        this.apiInputEl.value = this.settings.apiKey;
+        // Set defaults if they are unavailable
+        this.pathInputEl.value = this.settings.path || this.settings.path || defaultPath;
+        this.serverInputEl.value = this.settings.url || defaultUrl;
+        this.cmdrInputEl.value = this.settings.commander || '';
+        this.apiInputEl.value = this.settings.apiKey || '';
         // Update validation styles
         let inputElements = [
             this.pathInputEl,
@@ -133,13 +143,6 @@ export default class Settings {
         }
     }
 
-    settingsAreValid() {
-        return !settingIsInvalid(this.settings.path) &&
-            !settingIsInvalid(this.settings.url) &&
-            !settingIsInvalid(this.settings.commander) &&
-            !settingIsInvalid(this.settings.apiKey);
-    }
-
     fieldsAreValid() {
         let inputElements = [
             this.pathInputEl,
@@ -153,5 +156,21 @@ export default class Settings {
             }
         }
         return true;
+    }
+
+    areAvailable() {
+        return fs.existsSync(this.path);
+    }
+
+    settingsAreValid() {
+        if (this.loadExistingSettings()) {
+            return !settingIsInvalid(this.settings.path) &&
+                !settingIsInvalid(this.settings.url) &&
+                !settingIsInvalid(this.settings.commander) &&
+                !settingIsInvalid(this.settings.apiKey);
+        } else {
+            return false;
+        }
+
     }
 }

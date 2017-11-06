@@ -15,31 +15,29 @@ Settings:
 4) apiKey
 */
 
+const settingsPath = path.join(
+    process.resourcesPath,
+    'settings.json'
+);
+
 export default class Journal extends EventEmitter {
     constructor(settings) {
         super();
         this.active = false;
         this.settings = settings;
-        // Setup defaults
-        this.settings.path = settings ? settings.path : path.join(
-            os.homedir(),
-            'Saved Games',
-            'Frontier Developments',
-            'Elite Dangerous'
-        );
-        this.settings.url = settings.url || 'http://localhost:3000/';
-        // Setup internal classes
-        this.state = new JournalState();
-        this.watcher = new JournalWatcher(settings.path);
-        this.transmitter = new JournalTransmitter(
-            settings.url,
-            settings.commander,
-            settings.apiKey
-        );
     }
 
     init() {
+        // Setup internal classes
+        this.state = new JournalState();
+        this.watcher = new JournalWatcher(this.settings.path);
+        this.transmitter = new JournalTransmitter(
+            this.settings.url,
+            this.settings.commander,
+            this.settings.apiKey
+        );
         console.log('Initialising Journal Watcher');
+        console.log(`Settings:\nPath: ${this.settings.path}\nUrl: ${this.settings.url}\nCMDR: ${this.settings.commander}\nAPI Key: ${this.settings.apiKey}`);
         let self = this;
         // Setup connection check
         // self.checkConnection();
@@ -72,27 +70,6 @@ export default class Journal extends EventEmitter {
         });
     }
 
-    loadSettingsIfAvailable() {
-        if (this.settingsAvailable()) {
-            console.log(`Loading in settings from ${this.settingsPath}`);
-            let settings = JSON.parse(fs.readFileSync(this.settingsPath));
-            this.updateSettings(settings);
-        }
-    }
-
-    // UPDATE THIS TO GET DATA FROM FILE ONLY
-    updateSettingsFromFile() {
-        this.settings = settings;
-        // Update the UI
-        this.updateOptionsUi(settings);
-        this.updateButtonAvailability();
-        // Restart the watcher if it is active when settings are changed
-        if (this.isActive()) {
-            this.stopWatcher();
-            this.startWatcher();
-        }
-    }
-
     start() {
         console.log('Starting Journal Watcher');
         this.watcher.init();
@@ -119,6 +96,10 @@ export default class Journal extends EventEmitter {
 
     updateRecentEvents(data) {
         this.state.addRecentEvents(data);
+    }
+
+    updateSettings(settings) {
+        this.settings = settings;
     }
 
     isActive() {

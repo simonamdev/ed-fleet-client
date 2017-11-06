@@ -30,18 +30,20 @@ export default class Uplink {
         );
         this.active = false;
         this.journal = null;
+        this.settings = null;
         this.connectionCheck = null;
     }
 
     init() {
-        if (this.settingsFileAvailable()) {
+        this.settings = new Settings();
+        if (this.settings.settingsAreValid()) {
             let settings = JSON.parse(fs.readFileSync(this.settingsPath));
-            this.journal = new Journal(settings);
+            this.journal = new Journal(this.settings.settings);
             this.journal.init();
             this.subscribeToUiUpdates();
+            this.updateButtonAvailability(true);
         } else {
-            this.startButtonEl.disabled = true;
-            this.startButtonEl.innerText = 'Settings file unavailable - unable to open Uplink';
+            this.updateButtonAvailability(false);
         }
     }
 
@@ -60,7 +62,8 @@ export default class Uplink {
         if (!this.journal.isActive()) {
             this.active = true;
             // Update journal settings
-            // this.journal.updateSettingsFromFile(); // TODO
+            this.settings.loadExistingSettings();
+            this.journal.updateSettings(this.settings.settings);
             // Set label to active
             this.watcherStateEl.innerText = 'Active';
             // Switch button to active
@@ -92,6 +95,19 @@ export default class Uplink {
 
     isActive() {
         return this.active;
+    }
+
+    updateButtonAvailability(allowed) {
+        if (allowed) {
+            this.startButtonEl.classList.add('is-success');
+            this.startButtonEl.classList.remove('is-danger');
+            this.startButtonEl.innerText = 'Open Uplink';
+        } else {
+            this.startButtonEl.classList.remove('is-success');
+            this.startButtonEl.classList.add('is-danger');
+            this.startButtonEl.disabled = true;
+            this.startButtonEl.innerText = 'Settings file unavailable or invalid - unable to open Uplink';
+        }
     }
 
     subscribeToUiUpdates() {

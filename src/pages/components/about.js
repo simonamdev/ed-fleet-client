@@ -11,10 +11,9 @@ export default class About {
     }
 
     init() {
-        this.settings.loadExistingSettings();
         this.setupDomReferences();
         this.updateClientVersion();
-        if (this.settings.url) {
+        if (this.settings.loadExistingSettings() && this.settings.settings.url) {
             this.updateServerVersion();
         }
     }
@@ -31,7 +30,8 @@ export default class About {
 
     updateServerVersion() {
         const request = new XMLHttpRequest();
-        request.open('GET', url.resolve(this.settings.url, '/version'), true);
+        this.serverVersionEl.innerText = 'Retrieving version';
+        request.open('GET', url.resolve(this.settings.settings.url, '/version'), true);
 
         request.onload = () => {
             if (request.status >= 200 && request.status < 400) {
@@ -40,7 +40,9 @@ export default class About {
                 this.serverVersionEl.innerText = response.version;
             } else {
                 // We reached our target server, but it returned an error
-                console.error(`Error: ${request.responseText}, Code: ${request.status}`);
+                const errorStr = `Error: ${request.responseText}, Code: ${request.status}`;
+                console.error(errorStr);
+                this.serverVersionEl.innerText = errorStr;
             }
         };
 

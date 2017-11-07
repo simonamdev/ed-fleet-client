@@ -10,13 +10,16 @@
         <section class="section container">
             <h1 class="title has-text-centered">Elite: Dangerous Fleet Tracker Client</h1>
         </section>
-        <div class="tabs is-fullwidth">
+        <div class="tabs is-fullwidth is-boxed">
             <ul>
                 <li class="is-active">
-                    <a href="index.html">Uplink Mode</a>
+                    <a>Fleet</a>
                 </li>
                 <li>
-                    <a href="survey.html">Survey Mode</a>
+                    <a href="uplink.html">Uplink</a>
+                </li>
+                <li>
+                    <a href="survey.html">Planetary Survey</a>
                 </li>
                 <li>
                     <a href="settings.html">Settings</a>
@@ -27,47 +30,7 @@
             </ul>
         </div>
         <section class="section">
-            <div class="container columns has-text-centered">
-                <div class="column">
-                    <p class="heading">Client State</p>
-                    <p id="watcherState" class="title">Inactive</p>
-                </div>
-                <div class="column">
-                    <p class="heading">Server Connection</p>
-                    <p id="serverState" class="title">Disconnected</p>
-                </div>
-                <div class="column">
-                    <p class="heading">Fleet Name</p>
-                    <p id="fleetName" class="title">N/A</p>
-                </div>
-            </div>
-        </section>
-        <section class="section">
-            <div class="container columns has-text-centered">
-                <div class="column">
-                    <p class="heading">Events Transmitted</p>
-                    <p id="requestsCount" class="title">0</p>
-                </div>
-                <div class="column">
-                    <p class="heading">Error Count</p>
-                    <p id="errorCount" class="title">0</p>
-                </div>
-                <div class="column">
-                    <p class="heading">Last Event</p>
-                    <p id="lastEvent" class="title">N/A</p>
-                </div>
-            </div>
-        </section>
-        <section class="section">
-            <div class="container">
-                <div class="columns">
-                    <div class="column has-text-centered">
-                        <button id="startButton" class="button is-success wide-button">
-                            Open Uplink
-                        </button>
-                    </div>
-                </div>
-            </div>
+
         </section>
     </body>
     <script>require('./pages/index.js');</script>

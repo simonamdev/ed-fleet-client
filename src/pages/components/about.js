@@ -11,10 +11,15 @@ export default class About {
 
     setupDomReferences() {
         this.clientVersionEl = document.getElementById('clientVersion');
+        this.serverVersionEl = document.getElementById('serverVersion');
     }
 
     // Draw the client version number taken from the package.json file
     updateClientVersion() {
         this.clientVersionEl.innerText = packageJson.version.toString();
+    }
+
+    updateServerVersion() {
+
     }
 }

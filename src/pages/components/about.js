@@ -14,7 +14,9 @@ export default class About {
         this.settings.loadExistingSettings();
         this.setupDomReferences();
         this.updateClientVersion();
-        this.updateServerVersion();
+        if (this.settings.url) {
+            this.updateServerVersion();
+        }
     }
 
     setupDomReferences() {

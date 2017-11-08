@@ -2,13 +2,13 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Elite: Dangerous Fleet Tracker Client - About</title>
+        <title>Elite: Dangerous Fleet Tracker Client - Debug</title>
         <link rel="stylesheet" href="css/bulma.css" />
         <link rel="stylesheet" href="css/app.css" />
     </head>
     <body>
         <section class="section container">
-            <h1 class="title has-text-centered">About</h1>
+            <h1 class="title has-text-centered">Debug Menu</h1>
         </section>
         <div class="tabs is-fullwidth is-boxed">
             <ul>
@@ -24,26 +24,16 @@
                 <li>
                     <a href="settings.html">Settings</a>
                 </li>
-                <li class="is-active">
+                <li>
                     <a href="about.html">About</a>
                 </li>
             </ul>
         </div>
-        <section class="section container">
-            <div class="columns">
-                <div class="column has-text-centered">
-                    <p class="heading">Client Version</p>
-                    <p id="clientVersion" class="title">N/A</p>
-                </div>
-                <div class="column has-text-centered">
-                    <p class="heading">Server Version</p>
-                    <p id="serverVersion" class="title">N/A</p>
-                </div>
+        <section class="section news-section">
+            <div id="debug">
+
             </div>
         </section>
-        <section>
-            <a href="debug.html">Debug Menu</a>
-        </section>
     </body>
-    <script>require('./pages/about-page.js');</script>
+    <script>require('./pages/debug-page.js');</script>
 </html>

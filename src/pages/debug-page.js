@@ -1,9 +1,3 @@
-import url from 'url';
-import Settings from './components/settings';
-
-const settings = new Settings();
-settings.loadExistingSettings();
-
 const addMessage = (text) => {
     const message = document.createElement('p');
     message.innerText = text;
@@ -11,11 +5,10 @@ const addMessage = (text) => {
 };
 
 const sendTestEvent = () => {
-    console.log('Sending test event');
     const request = new XMLHttpRequest();
-    request.open('POST', url.resolve(settings.settings.url, '/event'), true);
+    request.open('POST', 'http://localhost:3000/event', true);
     request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    request.setRequestHeader('API-KEY', settings.settings.apiKey);
+    request.setRequestHeader('API-KEY', 'test');
 
     request.onload = () => {
         if (request.status >= 200 && request.status < 400) {
@@ -38,16 +31,13 @@ const sendTestEvent = () => {
     request.send(JSON.stringify(
         {
             data: {
-                event: 'debug event',
+                event: 'TEST DEBUG EVENT',
                 debug: true,
             },
-            commander: settings.settings.commander,
+            commander: 'TEST',
             timestamp: new Date(),
         },
     ));
 };
 
-const message = document.createElement('p');
-message.innerText = 'Starting debug event transmission';
-document.getElementById('debug').appendChild(message);
-setInterval(sendTestEvent, 2000);
+document.getElementById('eventDebugButton').addEventListener('click', sendTestEvent);

@@ -23,3 +23,8 @@ body: {
     width: 25%;
     height: 25%;
 }
+
+.debug-box {
+    height: 250px;
+    overflow-y: scroll;
+}

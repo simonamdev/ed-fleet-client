@@ -16,14 +16,20 @@ export default class JournalTransmitter {
             request.open('GET', this.latencyUrl, true);
 
             request.onload = () => {
-                if (request.status >= 200 && request.status < 400) {
+                if (request.status >= 200 && request.status <
+                    400) {
                     // Success!
                     let response = JSON.parse(request.responseText);
-                    let latency = Math.abs(new Date() - new Date(response.time));
-                    resolve({ latency: latency });
+                    let latency = Math.abs(new Date() - new Date(
+                        response.time));
+                    resolve({
+                        latency: latency
+                    });
                 } else {
                     // We reached our target server, but it returned an error
-                    reject(`Error: ${request.responseText}, Code: ${request.status}`);
+                    reject(
+                        `Error: ${request.responseText}, Code: ${request.status}`
+                    );
                 }
             };
 
@@ -40,22 +46,24 @@ export default class JournalTransmitter {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
             request.open('POST', this.eventsUrl, true);
-            request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            request.setRequestHeader('Content-Type',
+                'application/json;charset=UTF-8');
             request.setRequestHeader('API-KEY', this.apiKey);
 
             request.onload = () => {
-                if (request.status >= 200 && request.status < 400) {
+                if (request.status >= 200 && request.status <
+                    400) {
                     // Success!
                     let response = JSON.parse(request.responseText);
-                    resolve(
-                        {
-                            success: response.success,
-                            message: response.message
-                        }
-                    );
+                    resolve({
+                        success: response.success,
+                        message: response.message
+                    });
                 } else {
                     // We reached our target server, but it returned an error
-                    reject(`Error: ${request.responseText}, Code: ${request.status}`);
+                    reject(
+                        `Error: ${request.responseText}, Code: ${request.status}`
+                    );
                 }
             };
 
@@ -64,13 +72,11 @@ export default class JournalTransmitter {
                 reject('Event sending error');
             };
 
-            request.send(JSON.stringify(
-                {
-                    'data': data,
-                    'commander': this.commander,
-                    'timestamp': new Date()
-                }
-            ));
+            request.send(JSON.stringify({
+                'data': data,
+                'commander': this.commander,
+                'timestamp': new Date()
+            }));
         });
     }
 }

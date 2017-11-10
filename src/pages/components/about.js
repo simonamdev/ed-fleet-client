@@ -42,7 +42,7 @@ export default class About {
                 // We reached our target server, but it returned an error
                 const errorStr = `Error: ${request.responseText}, Code: ${request.status}`;
                 console.error(errorStr);
-                this.serverVersionEl.innerText = errorStr;
+                this.serverVersionEl.innerText = ':(';
             }
         };
 

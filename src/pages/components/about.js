@@ -37,7 +37,7 @@ export default class About {
             if (request.status >= 200 && request.status < 400) {
                 // Success!
                 const response = JSON.parse(request.responseText);
-                this.serverVersionEl.innerText = response.version;
+                this.serverVersionEl.innerText = response.server;
             } else {
                 // We reached our target server, but it returned an error
                 const errorStr = `Error: ${request.responseText}, Code: ${request.status}`;

@@ -33,8 +33,9 @@ const sendTestEvent = () => {
             data: {
                 event: 'TEST DEBUG EVENT',
                 debug: true,
+                starSystem: 'Test System'
             },
-            commander: 'TEST',
+            commander: 'Test CMDR',
             timestamp: new Date(),
         },
     ));

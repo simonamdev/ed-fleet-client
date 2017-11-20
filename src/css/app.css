@@ -25,6 +25,6 @@ body: {
 }
 
 .debug-box {
-    height: 150px;
+    height: 175px;
     overflow-y: scroll;
 }

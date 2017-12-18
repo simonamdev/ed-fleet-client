@@ -85,7 +85,7 @@ export default class Journal extends EventEmitter {
 
     checkLatency() {
         this.transmitter.checkLatency().then((response) => {
-            this.state.setConnectionState(`Latency: ${response.latency}ms`);
+            this.state.setConnectionState(`${response.latency}ms`);
             this.emit('serverUpdate', this.state);
         }).catch((error) => {
             this.state.setConnectionState('Request Error');

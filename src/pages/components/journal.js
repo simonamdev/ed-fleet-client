@@ -6,6 +6,7 @@ import EventEmitter from 'events';
 import JournalState from './journal/journal-state';
 import JournalWatcher from './journal/journal-watcher';
 import JournalTransmitter from './journal/journal-transmitter';
+import EddnService from './journal/eddn-service';
 
 /*
 Settings:
@@ -37,6 +38,10 @@ export default class Journal extends EventEmitter {
             this.settings.commander,
             this.settings.apiKey
         );
+        this.eddnService = new EddnService(
+            this.settings.commander,
+            true  // debug. where can I get this from?
+        );
         console.log('Initialising Journal Watcher');
         console.log(`Settings:\nPath: ${this.settings.path}\nUrl: ${this.settings.url}\nCMDR: ${this.settings.commander}\nAPI Key: ${this.settings.apiKey}`);
         let self = this;
@@ -67,6 +72,11 @@ export default class Journal extends EventEmitter {
                                 if (ev) {
                                     console.error(`Error: ${err} sending event: ${ev.event}`);
                                 }
+                            });
+                            self.eddnService.sendEvent(ev).then((response) => {
+                                console.log(`EDDN Response: ${response}`);
+                            }).catch((err) => {
+                                console.error(`Error sending data to EDDN: ${err}`);
                             });
                         });
                     }

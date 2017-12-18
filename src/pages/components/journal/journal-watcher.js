@@ -18,7 +18,7 @@ export default class JournalWatcher extends EventEmitter {
 
     init() {
         console.log(`Initialising watcher for: ${this.directory}`);
-        this.watcher = new LogWatcher(this.directory, 3);
+        this.watcher = new LogWatcher(this.directory, 3, true);
         this.watcher.on('Started', () => {
             console.log('Started');
         });

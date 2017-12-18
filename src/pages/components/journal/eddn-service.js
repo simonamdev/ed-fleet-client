@@ -19,11 +19,14 @@ export default class EddnService {
     }
 
     sendEvent(event) {
+        if (!event) {
+            return Promise.reject('Event not passed');
+        }
         // Only allow through the following events
         const allowedEvents = [
-            'Docked',
+            // 'Docked',  // skip as we cannot ensure that we have the star position
             'FSDJump',
-            'Scan',
+            // 'Scan',  // skip as we cannot ensure that we have the star system name
             'Location'
         ];
         if (allowedEvents.indexOf(event.event) === -1) {
@@ -39,6 +42,25 @@ export default class EddnService {
                 StarPos: event.StarPos
             }
         };
+        // Stip out keys not required by EDDN
+        const keysToRemove = [
+            'CockpitBreach',
+            'BoostUsed',
+            'FuelLevel',
+            'FuelUsed',
+            'JumpDist',
+            'Latitude',
+            'Longitude'
+        ];
+        for (const key in event) {
+            if (event.hasOwnProperty(key)) {
+                if (keysToRemove.indexOf(key) === -1 && !key.includes('Localised')) {
+                    message.message[key] = event[key];
+                }
+            }
+        }
+        console.log(event);
+        console.log(message);
         return this.transmit(message);
     }
 

@@ -40,7 +40,7 @@ export default class Journal extends EventEmitter {
         );
         this.eddnService = new EddnService(
             this.settings.commander,
-            true  // debug. where can I get this from?
+            false  // debug. where can I get this from?
         );
         console.log('Initialising Journal Watcher');
         console.log(`Settings:\nPath: ${this.settings.path}\nUrl: ${this.settings.url}\nCMDR: ${this.settings.commander}\nAPI Key: ${this.settings.apiKey}`);
@@ -58,6 +58,18 @@ export default class Journal extends EventEmitter {
                 setImmediate(() => {
                     for (let i = 0; i < events.length; i++) {
                         let ev = events[i];
+                        if (!ev) {
+                            continue;
+                        }
+                        // Send data to EDDN if enabled
+                        if (true) {
+                            self.eddnService.sendEvent(ev).then((response) => {
+                                console.log(`EDDN Response: ${response}`);
+                            }).catch((err) => {
+                                console.error(`Error sending data to EDDN: ${err}`);
+                            });
+                        }
+                        // Check against the whitelist
                         if (!self.onWhitelist(ev.event)) {
                             // console.log(`Event: ${ev.event} is not on the whitelist: ${this.whitelist}`);
                             continue;
@@ -72,11 +84,6 @@ export default class Journal extends EventEmitter {
                                 if (ev) {
                                     console.error(`Error: ${err} sending event: ${ev.event}`);
                                 }
-                            });
-                            self.eddnService.sendEvent(ev).then((response) => {
-                                console.log(`EDDN Response: ${response}`);
-                            }).catch((err) => {
-                                console.error(`Error sending data to EDDN: ${err}`);
                             });
                         });
                     }

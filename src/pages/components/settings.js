@@ -4,7 +4,9 @@ import path from 'path';
 
 const settingIsInvalid = val => (val == null || val === '');
 
-const defaultUrl = 'http://localhost:3000/';
+const development = process.env.NODE_ENV === 'development';
+
+const defaultUrl = development ? 'http://localhost:3000/' : 'http://fleet.the-sov.com/';
 const defaultPath = path.join(
     os.homedir(),
     'Saved Games',
@@ -27,7 +29,7 @@ export default class Settings {
         if (this.areAvailable()) {
             const settings = JSON.parse(fs.readFileSync(this.path));
             this.updateSettings(settings);
-            console.log(`Loaded settings:\nPath: ${settings.path}\nURL: ${settings.url}\nCommander: ${settings.commander}\nAPI Key: ${settings.apiKey}`);
+            console.log(`Loaded settings from file: ${this.path}\nJournal Path: ${settings.path}\nURL: ${settings.url}\nCommander: ${settings.commander}\nAPI Key: ${settings.apiKey}`);
             return true;
         }
         console.error('Unable to load existing settings');

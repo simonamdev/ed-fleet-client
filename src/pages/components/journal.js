@@ -21,10 +21,11 @@ const settingsPath = path.join(
 );
 
 export default class Journal extends EventEmitter {
-    constructor(settings) {
+    constructor(settings, whitelist) {
         super();
         this.active = false;
         this.settings = settings;
+        this.whitelist = whitelist;
     }
 
     init() {
@@ -52,6 +53,10 @@ export default class Journal extends EventEmitter {
                 setImmediate(() => {
                     for (let i = 0; i < events.length; i++) {
                         let ev = events[i];
+                        if (!self.onWhitelist(ev.event)) {
+                            // console.log(`Event: ${ev.event} is not on the whitelist: ${this.whitelist}`);
+                            continue;
+                        }
                         setImmediate(() => {
                             self.transmitter.sendEvent(ev).then((response) => {
                                 // console.log(response);
@@ -68,6 +73,13 @@ export default class Journal extends EventEmitter {
                 }, 0, events);
             }
         });
+    }
+
+    onWhitelist(event) {
+        if (this.whitelist.length) {
+            return this.whitelist.indexOf(event) >= 0;
+        }
+        return true;
     }
 
     start() {

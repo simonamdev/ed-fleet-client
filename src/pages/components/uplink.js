@@ -22,8 +22,9 @@ const settingsPath = path.join(
 );
 
 export default class Uplink {
-    constructor() {
+    constructor(whitelist) {
         this.setupDomReferences();
+        this.whitelist = whitelist || [];
         this.settingsPath = path.join(
             process.resourcesPath,
             'settings.json'
@@ -38,7 +39,7 @@ export default class Uplink {
         this.settings = new Settings();
         if (this.settings.settingsAreValid()) {
             let settings = JSON.parse(fs.readFileSync(this.settingsPath));
-            this.journal = new Journal(this.settings.settings);
+            this.journal = new Journal(this.settings.settings, this.whitelist);
             this.journal.init();
             this.subscribeToUiUpdates();
             this.updateButtonAvailability(true);
